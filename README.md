@@ -1,5 +1,5 @@
 # my-auto-deploy
-
+🎉Power Design By 打酱油🎉
 ## 项目简介
 
 > 该项目是基于`node`实现，对简单前端工程实现自动化部署至远端服务器指定目录。
@@ -48,5 +48,3 @@ const config = {
   releaseDir: 'web' // 发布目录
 }
 ```
-
-🎉Power Design By 打酱油🎉
