@@ -19,23 +19,29 @@ npm run deploy # 本地运行
 ```
 
 ## 示例
-- 1 待部署工程本地完成打包构建
+**1. 待部署工程本地完成打包构建**
+
 ![本地打包构建目录](https://upload-images.jianshu.io/upload_images/16708123-33f19b914e73c3bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-- 2 确定远端部署目录及发布文件夹
+**2. 确定远端部署目录及发布文件夹**
+
 ![远端部署目录](https://upload-images.jianshu.io/upload_images/16708123-ab32ab9c74fa0097.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-- 3 修改配置
+**3. 修改配置**
+
 ![修改配置文件](https://upload-images.jianshu.io/upload_images/16708123-73fe8869df97dca9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-- 4 进行自动化部署
-![image.png](https://upload-images.jianshu.io/upload_images/16708123-aaeafc13e272119b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**4. 运行自动化部署**
 
-- 5 查看远端效果
-![image.png](https://upload-images.jianshu.io/upload_images/16708123-0142fbe7b8ef9bc6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![运行自动化部署](https://upload-images.jianshu.io/upload_images/16708123-aaeafc13e272119b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-- 6 再次部署 原目录已备份（开启远端备份生效）
-![image.png](https://upload-images.jianshu.io/upload_images/16708123-ad5f1c9f130abf74.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**5. 查看远端效果**
+
+![远端部署目录](https://upload-images.jianshu.io/upload_images/16708123-0142fbe7b8ef9bc6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+**6. 再次部署 原目录已备份（开启远端备份生效）**
+
+![远端部署目录](https://upload-images.jianshu.io/upload_images/16708123-ad5f1c9f130abf74.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 配置文件说明
 ```js
