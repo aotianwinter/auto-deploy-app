@@ -5,7 +5,7 @@ runCommand = require ('./handleCommand')
 async function uploadFile (config, localFile) {
   return new Promise((resolve, reject) => {
     console.log('4-开始文件上传')
-    handleSourceFile()
+    handleSourceFile(config)
     ssh.putFile(localFile, config.deployDir + config.targetFile).then(async () => {
       resolve(console.log('5-文件上传完成'))
     }, (err) => {
@@ -15,7 +15,7 @@ async function uploadFile (config, localFile) {
 }
 
 // 处理源文件
-async function handleSourceFile () {
+async function handleSourceFile (config) {
   if (config.openBackUp) {
     console.log('已开启远端备份!')
     await runCommand(

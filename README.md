@@ -4,6 +4,9 @@
 
 > 该项目是基于`node`实现，对简单前端工程实现自动化部署至远端服务器指定目录。
 
+**更新：**
+🎉现已支持添加多个配置信息，自动化部署时支持选择配置信息运行
+
 优点：
   - 轻量、便捷
   - 可调节 本地压缩、远端备份
@@ -29,11 +32,13 @@ npm run deploy # 本地运行
 
 **3. 修改配置**
 
-![修改配置文件](https://upload-images.jianshu.io/upload_images/16708123-73fe8869df97dca9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![修改配置文件](https://upload-images.jianshu.io/upload_images/16708123-2a9c99dd4e7e032c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 **4. 运行自动化部署**
 
-![运行自动化部署](https://upload-images.jianshu.io/upload_images/16708123-aaeafc13e272119b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![选择配置信息](https://upload-images.jianshu.io/upload_images/16708123-cb9cafd23d9af3ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![自动化部署](https://upload-images.jianshu.io/upload_images/16708123-8b616e635b1d8ff6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 **5. 查看远端效果**
 
@@ -56,19 +61,38 @@ config.js
   openBackUp: 开启后，若远端存在相同目录，则会修改原始目录名称，不会直接覆盖
   deployDir: 指定远端部署地址
   releaseDir: 指定远端部署地址下的发布目录名称
+更新：
+  🎉现已支持添加多个配置信息，自动化部署时支持选择配置信息运行
 */
 
-const config = {
-  ssh: {
-    host: '192.168.0.110',
-    username: 'root',
-    password: 'root'
+const config = [
+  {
+    name: '项目A-dev',
+    ssh: {
+      host: '192.168.0.110',
+      username: 'root',
+      password: 'root'
+    },
+    targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
+    targetFile: 'dist.zip', // 目标文件
+    openCompress: true, // 是否开启本地压缩
+    openBackUp: true, // 是否开启远端备份
+    deployDir: '/home/node_test' + '/', // 远端目录
+    releaseDir: 'web' // 发布目录
   },
-  targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
-  targetFile: 'dist.zip', // 目标文件
-  openCompress: true, // 是否开启本地压缩
-  openBackUp: true, // 是否开启远端备份
-  deployDir: '/home/node_test' + '/', // 远端目录
-  releaseDir: 'web' // 发布目录
-}
+  {
+    name: '项目A-prod',
+    ssh: {
+      host: '192.168.0.110',
+      username: 'root',
+      password: 'root'
+    },
+    targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
+    targetFile: 'dist.zip', // 目标文件
+    openCompress: true, // 是否开启本地压缩
+    openBackUp: true, // 是否开启远端备份
+    deployDir: '/home/node_test' + '/', // 远端目录
+    releaseDir: 'web2' // 发布目录
+  }
+]
 ```

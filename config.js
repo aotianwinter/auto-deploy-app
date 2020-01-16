@@ -9,20 +9,39 @@ config.js
   openBackUp: 开启后，若远端存在相同目录，则会修改原始目录名称，不会直接覆盖
   deployDir: 指定远端部署地址
   releaseDir: 指定远端部署地址下的发布目录名称
+更新：
+  🎉现已支持添加多个配置信息，自动化部署时支持选择配置信息运行
 */
 
-const config = {
-  ssh: {
-    host: '192.168.0.110',
-    username: 'root',
-    password: 'root'
+const config = [
+  {
+    name: '项目A-dev',
+    ssh: {
+      host: '192.168.0.110',
+      username: 'root',
+      password: 'root'
+    },
+    targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
+    targetFile: 'dist.zip', // 目标文件
+    openCompress: true, // 是否开启本地压缩
+    openBackUp: true, // 是否开启远端备份
+    deployDir: '/home/node_test' + '/', // 远端目录
+    releaseDir: 'web' // 发布目录
   },
-  targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
-  targetFile: 'dist.zip', // 目标文件
-  openCompress: true, // 是否开启本地压缩
-  openBackUp: true, // 是否开启远端备份
-  deployDir: '/home/node_test' + '/', // 远端目录
-  releaseDir: 'web' // 发布目录
-}
+  {
+    name: '项目A-prod',
+    ssh: {
+      host: '192.168.0.110',
+      username: 'root',
+      password: 'root'
+    },
+    targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
+    targetFile: 'dist.zip', // 目标文件
+    openCompress: true, // 是否开启本地压缩
+    openBackUp: true, // 是否开启远端备份
+    deployDir: '/home/node_test' + '/', // 远端目录
+    releaseDir: 'web2' // 发布目录
+  }
+]
 
 module.exports = config
