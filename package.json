@@ -10,9 +10,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "deploy": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "node app.js"
   },
+  "keywords": [  
+    "node", "front-end", "auto-deploy", "web"
+  ],
   "author": "打酱油",
   "license": "MIT"
 }

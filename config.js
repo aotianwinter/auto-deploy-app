@@ -18,6 +18,7 @@ const config = [
     name: '项目A-dev',
     ssh: {
       host: '192.168.0.110',
+      port: 22,
       username: 'root',
       password: 'root'
     },
@@ -32,6 +33,7 @@ const config = [
     name: '项目A-prod',
     ssh: {
       host: '192.168.0.110',
+      port: 22,
       username: 'root',
       password: 'root'
     },
