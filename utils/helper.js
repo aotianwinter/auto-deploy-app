@@ -1,4 +1,4 @@
-inquirer = require('inquirer')
+const inquirer = require('inquirer')
 
 const selectTip = 'project name:'
 const options = [
@@ -11,7 +11,7 @@ const options = [
   }
 ]
 
-// 显示选择
+// 显示选择提示窗
 function showHelper (config) {
   return new Promise((resolve, reject) => {
     initHelper(config) // 初始化helper

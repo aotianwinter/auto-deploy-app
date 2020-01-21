@@ -1,6 +1,7 @@
-node_ssh = require('node-ssh')
-ssh = new node_ssh()
+const node_ssh = require('node-ssh')
+const ssh = new node_ssh()
 
+// 连接服务器
 function connectServe (sshInfo) {
   return new Promise((resolve, reject) => {
     ssh.connect({ ...sshInfo }).then(() => {
@@ -11,4 +12,4 @@ function connectServe (sshInfo) {
   })
 }
 
-module.exports = connectServe
+module.exports = { ssh, connectServe }

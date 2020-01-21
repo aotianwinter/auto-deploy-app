@@ -1,8 +1,5 @@
-node_ssh = require('node-ssh')
-ssh = new node_ssh()
-
-// run linux shell
-function runCommand (command, path) {
+// run linux shell(ssh对象、shell指令、执行路径)
+function runCommand (ssh, command, path) {
   return new Promise((resolve, reject) => {
     ssh.execCommand(command, {
       cwd: path

@@ -1,5 +1,5 @@
-var fs = require('fs')
-var archiver = require('archiver')
+const fs = require('fs')
+const archiver = require('archiver')
 
 function compressFile (targetDir, localFile) {
   return new Promise((resolve, reject)=>{
