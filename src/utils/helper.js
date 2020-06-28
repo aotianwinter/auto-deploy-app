@@ -23,7 +23,7 @@ function showHelper (config) {
   })
 }
 
-// 初始化helper
+// init helper
 function initHelper (config) {
   for (let item of config) {
     options[0].choices.push(item.name)

@@ -4,9 +4,9 @@ const archiver = require('archiver')
 function compressFile (targetDir, localFile) {
   return new Promise((resolve, reject)=>{
     console.log('1-正在压缩文件...')
-    let output = fs.createWriteStream(localFile) // 创建文件写入流
+    let output = fs.createWriteStream(localFile) // create file stream write
     const archive = archiver('zip', {
-      zlib: { level: 9 } // 设置压缩等级
+      zlib: { level: 9 } // set compress level
     })
     output.on('close', () => {
       resolve(
@@ -15,9 +15,9 @@ function compressFile (targetDir, localFile) {
     }).on('error', (err) => {
       reject(console.error('压缩失败', err))
     })
-    archive.pipe(output) // 管道存档数据到文件
-    archive.directory(targetDir, 'dist') // 存储目标文件并重命名
-    archive.finalize() // 完成文件追加 确保写入流完成
+    archive.pipe(output) // save file by pipe
+    archive.directory(targetDir, 'dist') // save target file and rename
+    archive.finalize() // sure file stream write completely
   })
 }
 
