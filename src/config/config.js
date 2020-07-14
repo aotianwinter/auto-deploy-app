@@ -28,6 +28,7 @@ const config = [
     },
     targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
     targetFile: 'dist.zip', // 目标文件
+    openCompress: true, // 是否开启本地压缩
     openBackUp: true, // 是否开启远端备份
     deployDir: '/home/node_test' + '/', // 远端目录
     releaseDir: 'web' // 发布目录
@@ -44,6 +45,7 @@ const config = [
     },
     targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
     targetFile: 'dist.zip', // 目标文件
+    openCompress: true, // 是否开启本地压缩
     openBackUp: true, // 是否开启远端备份
     deployDir: '/home/node_test' + '/', // 远端目录
     releaseDir: 'web2' // 发布目录
@@ -58,11 +60,13 @@ const config = [
       // privateKey: 'E:/id_rsa', // ssh私钥(不使用此方法时请勿填写， 注释即可)
       passphrase: '123456' // ssh私钥对应解密密码(不存在设为''即可)
     },
-    targetDir: 'E:/dist', // 目标压缩目录(可使用相对地址)
-    targetFile: 'dist.zip', // 目标文件
+    targetDir: 'E:/dist', // 目标压缩目录 (可使用相对地址)
+    targetFile: 'dist.zip', // 目标文件 (对应项目根目录下文件)
+    openCompress: true, // 是否开启本地压缩
     openBackUp: true, // 是否开启远端备份
     deployDir: '/home/dajiangyou/test' + '/', // 远端目录
-    releaseDir: 'deploy-test' // 发布目录
+    releaseDir: 'deploy-test', // 发布目录
+    dockerFile: './docker/Dockerfile' // docker文件位置 (可使用相对地址)
   },
 ]
 

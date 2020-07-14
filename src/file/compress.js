@@ -1,7 +1,7 @@
 const fs = require('fs')
 const archiver = require('archiver')
 
-function compressFile (targetDir, localFile) {
+function compress (targetDir, localFile) {
   return new Promise((resolve, reject)=>{
     console.log('1-正在压缩文件...')
     let output = fs.createWriteStream(localFile) // create file stream write
@@ -21,4 +21,4 @@ function compressFile (targetDir, localFile) {
   })
 }
 
-module.exports = compressFile
+module.exports = compress
