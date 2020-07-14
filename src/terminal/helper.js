@@ -14,11 +14,11 @@ const options = [
 // 显示选择提示窗
 function showHelper (config) {
   return new Promise((resolve, reject) => {
-    initHelper(config) // 初始化helper
+    initHelper(config) // init helper
     inquirer.prompt(options).then(answers => {
       resolve({ value: findInfoByName(config, answers[selectTip]) }) // 查找所选配置项
     }).catch((err) => {
-      reject(console.error(' helper显示或选择出错！', err))
+      reject(console.error('helper显示或选择出错！'.error, err))
     })
   })
 }
@@ -28,10 +28,10 @@ function initHelper (config) {
   for (let item of config) {
     options[0].choices.push(item.name)
   }
-  console.log('正在检查全局配置信息...')
+  console.log('正在检查全局配置信息...'.bold)
   // 检查是否存在相同name
   if (new Set(options[0].choices).size !== options[0].choices.length) {
-    console.error('请检查配置信息，存在相同name！')
+    console.error('请检查配置信息，存在相同name！'.warn)
     process.exit()
   }
 }

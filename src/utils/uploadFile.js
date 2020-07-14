@@ -1,15 +1,15 @@
-const runCommand = require ('./handleCommand')
+const runCommand = require ('../ssh/handleCommand')
 const getCurrentTime = require ('./handleTime')
 
 // 文件上传(ssh对象、配置信息、本地待上传文件)
 async function uploadFile (ssh, config, localFile) {
   return new Promise((resolve, reject) => {
-    console.log('4-开始文件上传')
+    console.log('4- 开始文件上传')
     handleSourceFile(ssh, config)
     ssh.putFile(localFile, config.deployDir + config.targetFile).then(async () => {
-      resolve(console.log('5-文件上传完成'))
+      resolve(console.log('5- 文件上传完成'.success))
     }, (err) => {
-      reject(console.error('5-上传失败！', err))
+      reject(console.log('5- 上传失败！'.error, err))
     })
   })
 }
@@ -27,7 +27,7 @@ async function handleSourceFile (ssh, config) {
       `,
       config.deployDir)
   } else {
-    console.log('提醒：未开启远端备份!')
+    console.log('提醒：未开启远端备份!'.warn)
     await runCommand(
       ssh,
       `

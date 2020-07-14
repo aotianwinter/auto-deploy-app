@@ -1,13 +1,13 @@
 const node_ssh = require('node-ssh')
 const ssh = new node_ssh()
 
-// 连接服务器
+// ssh connect
 function connectServe (sshInfo) {
   return new Promise((resolve, reject) => {
     ssh.connect({ ...sshInfo }).then(() => {
-      resolve(console.log('3-' + sshInfo.host + ' 连接成功'))
+      resolve(console.log(`3- ${ sshInfo.host } 连接成功`.success))
     }).catch((err) => {
-      reject(console.error('3-' + sshInfo.host + ' 连接失败', err))
+      reject(console.log(`3- ${ sshInfo.host } 连接失败`.error, err))
     })
   })
 }
