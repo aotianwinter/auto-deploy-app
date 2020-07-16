@@ -4,12 +4,14 @@ function runCommand (ssh, command, path) {
     ssh.execCommand(command, {
       cwd: path
     }).then((res) => {
-      if (res.stderr) {
-        reject(console.log('命令执行发生错误'.error + res.stderr))
+      if (res.code === 0) {
+        console.log(res.stdout)
+        resolve(console.log(command + ' 执行完成！'.success))
+      } else {
+        reject(console.log(command + ' 命令执行发生错误'.error))
+        console.log(res.stderr)
         console.log('请检查远端环境中该命令是否有效！'.warn)
         process.exit()
-      } else {
-        resolve(console.log(command + '执行完成！'.success))
       }
     })
   })

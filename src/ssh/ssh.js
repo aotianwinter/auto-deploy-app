@@ -5,9 +5,9 @@ const ssh = new node_ssh()
 function connectServe (sshInfo) {
   return new Promise((resolve, reject) => {
     ssh.connect({ ...sshInfo }).then(() => {
-      resolve(console.log(`3- ${ sshInfo.host } 连接成功`.success))
+      resolve(console.log(`${ sshInfo.host } 连接成功`.success))
     }).catch((err) => {
-      reject(console.log(`3- ${ sshInfo.host } 连接失败`.error, err))
+      reject(console.log(`${ sshInfo.host } 连接失败`.error, err))
     })
   })
 }

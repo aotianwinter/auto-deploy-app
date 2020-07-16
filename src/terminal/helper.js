@@ -28,7 +28,6 @@ function initHelper (config) {
   for (let item of config) {
     options[0].choices.push(item.name)
   }
-  console.log('正在检查全局配置信息...'.bold)
   // 检查是否存在相同name
   if (new Set(options[0].choices).size !== options[0].choices.length) {
     console.error('请检查配置信息，存在相同name！'.warn)

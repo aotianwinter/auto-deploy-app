@@ -17,57 +17,27 @@ config.js
 
 const config = [
   {
-    name: '项目A-dev',
-    ssh: {
-      host: '192.168.0.110',
-      port: 22,
-      username: 'root',
-      password: 'root',
-      privateKey: 'E:/id_rsa', // ssh私钥(不使用此方法时请勿填写， 注释即可)
-      passphrase: '123456' // ssh私钥对应解密密码(不存在设为''即可)
-    },
-    targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
-    targetFile: 'dist.zip', // 目标文件
-    openCompress: true, // 是否开启本地压缩
-    openBackUp: true, // 是否开启远端备份
-    deployDir: '/home/node_test' + '/', // 远端目录
-    releaseDir: 'web' // 发布目录
-  },
-  {
-    name: '项目A-prod',
-    ssh: {
-      host: '192.168.0.110',
-      port: 22,
-      username: 'root',
-      password: 'root',
-      privateKey: 'E:/id_rsa', // ssh私钥(不使用此方法时请勿填写， 注释即可)
-      passphrase: '123456' // ssh私钥对应解密密码(不存在设为''即可)
-    },
-    targetDir: 'E:/private/my-vue-cli/dist', // 目标压缩目录(可使用相对地址)
-    targetFile: 'dist.zip', // 目标文件
-    openCompress: true, // 是否开启本地压缩
-    openBackUp: true, // 是否开启远端备份
-    deployDir: '/home/node_test' + '/', // 远端目录
-    releaseDir: 'web2' // 发布目录
-  },
-  {
     name: '临时测试',
     ssh: {
       host: '120.26.51.81',
       port: 22,
       username: 'root',
       password: 'Zheng668449',
-      // privateKey: 'E:/id_rsa', // ssh私钥(不使用此方法时请勿填写， 注释即可)
-      passphrase: '123456' // ssh私钥对应解密密码(不存在设为''即可)
+      // privateKey: 'E:/id_rsa', // ssh私钥(不使用此方法时请勿填写 注释即可)
+      // passphrase: '123456' // ssh私钥对应解密密码(不存在设为''即可)
     },
-    targetDir: 'E:/dist', // 目标压缩目录 (可使用相对地址)
+    targetDir: 'E:/Private/my-picture-online/dist', // 源码目录 (可使用相对地址)
+    exclude: [
+      'node_modules/'
+    ],
     targetFile: 'dist.zip', // 目标文件 (对应项目根目录下文件)
     openCompress: true, // 是否开启本地压缩
     openBackUp: true, // 是否开启远端备份
     deployDir: '/home/dajiangyou/test' + '/', // 远端目录
     releaseDir: 'deploy-test', // 发布目录
-    dockerFile: './docker/Dockerfile' // docker文件位置 (可使用相对地址)
-  },
+    docker_file: './Dockerfile', // docker文件位置
+    docker_compose: './docker-compose.yml', // docker-compose文件位置
+  }
 ]
 
 module.exports = config
