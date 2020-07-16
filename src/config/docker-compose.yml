@@ -2,8 +2,8 @@ version: "3.8"
 
 services: 
   web:
-    container_name: test_web
+    container_name: spa_web
     restart: always
-    image: test/web:dev
+    image: spa/web:spa
     ports: 
-      - 8886:80
+      - 8900:80
