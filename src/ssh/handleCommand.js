@@ -6,12 +6,13 @@ function runCommand (ssh, command, path) {
     }).then((res) => {
       if (res.code === 0) {
         console.log(res.stdout)
-        resolve(console.log(command + ' 执行完成！'.success))
+        console.log(command + ' 执行完成！'.success)
+        resolve(true)
       } else {
-        reject(console.log(command + ' 命令执行发生错误'.error))
+        console.log(command + ' 命令执行发生错误'.error)
         console.log(res.stderr)
         console.log('请检查远端环境中该命令是否有效！'.warn)
-        process.exit()
+        reject('false')
       }
     })
   })

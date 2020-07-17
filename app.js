@@ -30,7 +30,9 @@ async function main () {
       targetDir,
       releaseDir,
       docker_file,
-      docker_compose
+      image_name,
+      docker_compose,
+      container_name
     } = SELECT_CONFIG
     console.log(`您选择了部署 ${ name }`.info)
     /* 本地压缩 处理流程 */
@@ -54,7 +56,7 @@ async function main () {
     await runCommand(ssh, 'rm -f ' + targetFile, deployDir) // clear zip file
     /* 
       docker 部署流程
-      docker env check --> upload Dockerfile --> build image 
+      docker env check --> upload Dockerfile --> build image
       upload docker-compose --> run docker-compose --> show container
     */
     await dockerInspect(ssh)
@@ -62,14 +64,19 @@ async function main () {
     await uploadFile(ssh, getAbsolutePath(docker_file), dockerFilePath + '/Dockerfile') // upload Dockerfile
     console.log('5- 开始构建docker镜像...'.bold)
     //TODO 构建镜像需要可配
-    await runCommand(ssh, 'docker build -t spa/web:spa .', dockerFilePath)
+    await runCommand(ssh, `docker build -t ${ image_name } .`, dockerFilePath)
     await uploadFile(ssh, getAbsolutePath(docker_compose), dockerFilePath + '/docker-compose.yml') // upload Dockerfile
     console.log('6- 正在运行docker-compose...请耐心等待')
+    if (await runCommand(ssh, `docker ps -f name=${ container_name }`)) {
+      console.log('删除同名容器...')
+      await runCommand(ssh, `docker stop ${ container_name }`, '')
+      await runCommand(ssh, `docker rm ${ container_name }`, '')
+    }
     await runCommand(ssh, 'docker-compose up -d', dockerFilePath)
     // 显示当前运行中容器
     console.log('7- 当前运行中的容器...'.bold)
     await runCommand(ssh, 'docker ps', dockerFilePath)
-    console.log('🎉恭喜！部署成功🎉'.success)
+    console.log(`恭喜！${ name }部署成功`.success)
   } catch (err) {
     console.log('部署过程出现错误！'.error, err)
   } finally {
