@@ -1,22 +1,46 @@
 const inquirer = require('inquirer')
-
-const selectTip = 'project name:'
-const options = [
+// 项目选择
+const selectProjectName = 'PROJECT_NAME'
+const projectOptions = [
   {
     type: 'list',
-    name: selectTip,
+    name: selectProjectName,
     message: 'Which project do you want to deploy?',
     choices: []
-    // new inquirer.Separator() // 分割线
+  }
+]
+// 部署方式选择
+const selectDeployMode = 'DEPLOY_TYPE'
+const deployModeOptions = [
+  {
+    type: 'list',
+    name: selectDeployMode,
+    message: 'Which deployment mode do you want to use?',
+    choices: [
+      { name: 'legacy' },
+      { name: 'docker' },
+      { name: 'docker-compose' }
+    ]
   }
 ]
 
-// 显示选择提示窗
-function showHelper (config) {
+// 项目选择提示窗
+function projectHelper (config) {
   return new Promise((resolve, reject) => {
     initHelper(config) // init helper
-    inquirer.prompt(options).then(answers => {
-      resolve({ value: findInfoByName(config, answers[selectTip]) }) // 查找所选配置项
+    inquirer.prompt(projectOptions).then(answers => {
+      resolve({ value: findInfoByName(config, answers[selectProjectName]) }) // 查找所选配置项
+    }).catch((err) => {
+      reject(console.error('helper显示或选择出错！'.error, err))
+    })
+  })
+}
+
+// 部署方式选择提示窗
+function deployModeHelper () {
+  return new Promise((resolve, reject) => {
+    inquirer.prompt(deployModeOptions).then(answers => {
+      resolve(answers[selectDeployMode])
     }).catch((err) => {
       reject(console.error('helper显示或选择出错！'.error, err))
     })
@@ -26,10 +50,10 @@ function showHelper (config) {
 // init helper
 function initHelper (config) {
   for (let item of config) {
-    options[0].choices.push(item.name)
+    projectOptions[0].choices.push(item.name)
   }
   // 检查是否存在相同name
-  if (new Set(options[0].choices).size !== options[0].choices.length) {
+  if (new Set(projectOptions[0].choices).size !== projectOptions[0].choices.length) {
     console.error('请检查配置信息，存在相同name！'.warn)
     process.exit()
   }
@@ -44,4 +68,4 @@ function findInfoByName (config, name) {
   }
 }
 
-module.exports = showHelper
+module.exports = { projectHelper, deployModeHelper }

@@ -31,12 +31,13 @@ const config = [
       'node_modules/'
     ],
     targetFile: 'dist.zip', // 目标文件 (对应项目根目录下文件)
-    openCompress: true, // 是否开启本地压缩
+    openCompress: false, // 是否开启本地压缩
     openBackUp: true, // 是否开启远端备份
     deployDir: '/app' + '/', // 远端目录
-    releaseDir: 'SPA_test', // 发布目录
+    releaseDir: 'SPA_test', // 发布目录（最终发布目录为/app/SPA_test）
     docker_file: './Dockerfile', // docker文件位置
     image_name: 'spa/web:spa', // 编译后的镜像名（web:dev）
+    port: '8800:80', // 端口号映射（宿主机：内部（与配置文件对应，默认80），确保宿主机端口号可正常访问）
     docker_compose: './docker-compose.yml', // docker-compose文件位置
     container_name: 'spa_web'
   }
