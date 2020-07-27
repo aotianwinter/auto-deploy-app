@@ -3,7 +3,7 @@ require ('./src/terminal/color') // terminal color
 const config = require ('./src/config/config')
 const { ssh, connectServe } = require ('./src/ssh/ssh')
 
-const { projectHelper, deployModeHelper } = require ('./src/terminal/helper')
+const { projectHelper, deployModeHelper, buildModeHelper } = require ('./src/terminal/helper')
 const backup = require ('./src/file/backup')
 const compress = require ('./src/file/compress')
 const uploadFile = require ('./src/utils/uploadFile')
@@ -27,6 +27,7 @@ async function main () {
       deployDir,
       targetFile,
       targetDir,
+      exclude,
       releaseDir,
       docker_file,
       image_name,
@@ -37,11 +38,15 @@ async function main () {
     console.log(`您选择了部署 ${ name }`.info)
     const DEPLOY__MODE = await deployModeHelper(config)
     console.log(`您选择了 ${ DEPLOY__MODE } 部署方式`.info)
+    // TODO 是否远端源码编译
+    const BUILD__MODE = await buildModeHelper(config)
+    console.log(`您选择了 ${ BUILD__MODE } 部署方式`.info)
+    return
     /* 本地压缩 处理流程 */
     console.log('2- 文件本地压缩处理...'.bold)
     const localFile =  __dirname + '/' + targetFile // 待上传本地文件
     openCompress ? 
-      await compress(getAbsolutePath(targetDir), localFile) :
+      await compress(getAbsolutePath(targetDir), localFile, exclude) :
       console.log('未开启本地压缩，已跳过'.warn) // 处理是否压缩
     // ssh 连接
     console.log('3- 执行SSH连接'.bold)
@@ -49,6 +54,7 @@ async function main () {
     // 部署前检查： 备份检查 --> 文件上传
     console.log('4- 执行部署前检查流程'.bold)
     await backup(ssh, SELECT_CONFIG) // 根据配置决定是否备份
+    // TODO 支持前端编译过程
     await uploadFile(ssh, localFile, deployDir + targetFile) // upload target file
     // 物理部署 解压、修改、删除文件
     await runCommand(ssh, 'unzip ' + targetFile, deployDir) // unzip

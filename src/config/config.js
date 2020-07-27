@@ -26,12 +26,15 @@ const config = [
       // privateKey: 'E:/id_rsa', // ssh私钥(不使用此方法时请勿填写 注释即可)
       // passphrase: '123456' // ssh私钥对应解密密码(不存在设为''即可)
     },
-    targetDir: 'E:/Private/my-picture-online/dist', // 源码目录 (可使用相对地址)
+    targetDir: 'E:/Private/my-picture-online/dist', // 打包编译后目录 (可使用相对地址)
+    sourceDir: 'E:/Private/my-picture-online/dist', // 源码目录 (可使用相对地址)
     exclude: [
-      'node_modules/'
+      'node_modules', //  源码目录中 默认排除 node_modules, dist, .git
+      'dist',
+      '.git',
     ],
     targetFile: 'dist.zip', // 目标文件 (对应项目根目录下文件)
-    openCompress: false, // 是否开启本地压缩
+    openCompress: true, // 是否开启本地压缩
     openBackUp: true, // 是否开启远端备份
     deployDir: '/app' + '/', // 远端目录
     releaseDir: 'SPA_test', // 发布目录（最终发布目录为/app/SPA_test）
