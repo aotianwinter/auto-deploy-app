@@ -1,53 +1,47 @@
-require ('./src/terminal/color') // terminal color
+require ('./terminal/color') // terminal color
 
-const config = require ('./src/config/config')
-const { ssh, connectServe } = require ('./src/ssh/ssh')
+const config = require ('./config/config')
+const { ssh, connectServe } = require ('./ssh/ssh')
 
-const { projectHelper, deployModeHelper, buildModeHelper } = require ('./src/terminal/helper')
-const backup = require ('./src/file/backup')
-const compress = require ('./src/file/compress')
-const uploadFile = require ('./src/utils/uploadFile')
-const runCommand = require ('./src/ssh/handleCommand')
+const { projectHelper, deployModeHelper, buildModeHelper } = require ('./terminal/helper')
+const backup = require ('./file/backup')
+const compress = require ('./file/compress')
+const uploadFile = require ('./utils/uploadFile')
+const runCommand = require ('./ssh/handleCommand')
 
-const getAbsolutePath = require ('./src/utils/path') // 获取绝对路径
+const getAbsolutePath = require ('./utils/path') // 获取绝对路径
 
 // 主程序
 async function main () {
   try {
-    console.log('请确保文件解压后为dist目录!!!'.error)  
-    /* 
-      部署 前期检查
-      检查 配置信息 是否合格
-    */
+    // 部署前检查 配置信息是否合格
     console.log('1- 正在检查全局配置信息...'.bold)
     const SELECT_CONFIG = (await projectHelper(config)).value // 所选部署项目的配置信息
     const {
       name,
-      openCompress,
       deployDir,
-      targetFile,
-      targetDir,
+      distDir,
+      sourceDir,
       exclude,
       releaseDir,
       docker_file,
       image_name,
-      port,
+      ports,
       docker_compose,
       container_name
     } = SELECT_CONFIG
     console.log(`您选择了部署 ${ name }`.info)
     const DEPLOY__MODE = await deployModeHelper(config)
     console.log(`您选择了 ${ DEPLOY__MODE } 部署方式`.info)
-    // TODO 是否远端源码编译
-    const BUILD__MODE = await buildModeHelper(config)
-    console.log(`您选择了 ${ BUILD__MODE } 部署方式`.info)
-    return
+    const BUILD__MODE = DEPLOY__MODE === 'legacy' ? 'dist' : await buildModeHelper(config)
+    console.log(BUILD__MODE === 'dist' ? '您选择了 上传构建后的代码 dist 进行部署'.info : '您选择了 上传源码source(远端进行构建并部署)'.info)
     /* 本地压缩 处理流程 */
     console.log('2- 文件本地压缩处理...'.bold)
-    const localFile =  __dirname + '/' + targetFile // 待上传本地文件
-    openCompress ? 
-      await compress(getAbsolutePath(targetDir), localFile, exclude) :
-      console.log('未开启本地压缩，已跳过'.warn) // 处理是否压缩
+    const zipFile = BUILD__MODE === 'dist' ? 'dist.zip' : 'source.zip' // 获取上传文件的具体名称
+    const localFile =  __dirname + '/' + zipFile // 待上传本地文件
+    BUILD__MODE === 'dist' ?
+      await compress(getAbsolutePath(distDir), localFile)
+      : await compress(getAbsolutePath(sourceDir), localFile, exclude)
     // ssh 连接
     console.log('3- 执行SSH连接'.bold)
     await connectServe(SELECT_CONFIG.ssh)
@@ -55,11 +49,11 @@ async function main () {
     console.log('4- 执行部署前检查流程'.bold)
     await backup(ssh, SELECT_CONFIG) // 根据配置决定是否备份
     // TODO 支持前端编译过程
-    await uploadFile(ssh, localFile, deployDir + targetFile) // upload target file
+    await uploadFile(ssh, localFile, deployDir + zipFile) // upload target file
     // 物理部署 解压、修改、删除文件
-    await runCommand(ssh, 'unzip ' + targetFile, deployDir) // unzip
-    await runCommand(ssh, 'mv dist ' + releaseDir, deployDir) // 修改文件名称
-    await runCommand(ssh, 'rm -f ' + targetFile, deployDir) // clear zip file
+    await runCommand(ssh, 'unzip ' + zipFile, deployDir) // unzip
+    await runCommand(ssh, 'mv web ' + releaseDir, deployDir) // 修改文件名称
+    await runCommand(ssh, 'rm -f ' + zipFile, deployDir) // clear zip file
     if (DEPLOY__MODE === 'legacy') return
     // docker流程
     // docker 部署流程 docker env check --> upload Dockerfile --> build image
@@ -75,7 +69,7 @@ async function main () {
         await runCommand(ssh, `docker stop ${ container_name }`, '')
         await runCommand(ssh, `docker rm ${ container_name }`, '')
       }
-      await runCommand(ssh, `docker run --name ${container_name} -p ${port} -v ${dockerFilePath}/default.conf:/etc/nginx/conf.d/default.conf -d ${image_name}`, dockerFilePath)
+      await runCommand(ssh, `docker run --name ${container_name} -p ${ports} -v ${dockerFilePath}/default.conf:/etc/nginx/conf.d/default.conf -d ${image_name}`, dockerFilePath)
     } else {
       // docker-compose 部署流程 upload docker-compose --> run docker-compose --> show container
       await runCommand(ssh, `docker-compose -v`, '/')

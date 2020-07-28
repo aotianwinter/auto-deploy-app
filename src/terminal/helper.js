@@ -23,6 +23,19 @@ const deployModeOptions = [
     ]
   }
 ]
+// 云端编译选择
+const selectBuildMode = 'BUILD_MODE'
+const buildModeOptions = [
+  {
+    type: 'list',
+    name: selectBuildMode,
+    message: 'Which dir do you want to upload?',
+    choices: [
+      { name: 'source' },
+      { name: 'dist' }
+    ]
+  }
+]
 
 // 项目选择提示窗
 function projectHelper (config) {
@@ -41,6 +54,17 @@ function deployModeHelper () {
   return new Promise((resolve, reject) => {
     inquirer.prompt(deployModeOptions).then(answers => {
       resolve(answers[selectDeployMode])
+    }).catch((err) => {
+      reject(console.error('helper显示或选择出错！'.error, err))
+    })
+  })
+}
+
+// 远端源码编译提示窗
+function buildModeHelper () {
+  return new Promise((resolve, reject) => {
+    inquirer.prompt(buildModeOptions).then(answers => {
+      resolve(answers[selectBuildMode])
     }).catch((err) => {
       reject(console.error('helper显示或选择出错！'.error, err))
     })
@@ -68,4 +92,4 @@ function findInfoByName (config, name) {
   }
 }
 
-module.exports = { projectHelper, deployModeHelper }
+module.exports = { projectHelper, deployModeHelper, buildModeHelper }

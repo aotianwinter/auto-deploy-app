@@ -2,13 +2,10 @@ const fs = require('fs')
 const archiver = require('archiver')
 const join = require('path').join
 
-function compress (targetDir, localFile, excludeFiles, homeDirName = 'dist/') {
+function compress (targetDir, localFile, excludeFiles, homeDirName = 'web/') {
   return new Promise((resolve, reject)=>{
     // 压缩前的准备
     const filterDir = filterExcludeFiles(targetDir, excludeFiles)
-    // TODO 待完善
-    // return
-    console.log(targetDir)
     console.log('正在压缩文件...')
     let output = fs.createWriteStream(localFile) // create file stream write
     const archive = archiver('zip', {
@@ -36,7 +33,6 @@ function compress (targetDir, localFile, excludeFiles, homeDirName = 'dist/') {
         archive.file(filePath, { name: file, prefix: homeDirName })
       }
     })
-    // archive.directory(targetDir, 'dist') // save target file and rename
     archive.finalize() // make sure file stream write completely
   })
 }
@@ -47,6 +43,5 @@ function filterExcludeFiles (targetDir, excludeFiles = []) {
     return (!excludeFiles.includes(file))
   })
 }
-
 
 module.exports = compress
