@@ -7,12 +7,12 @@ function runCommand (ssh, command, path) {
       if (res.code === 0) {
         console.log(res.stdout)
         console.log(command + ' 执行完成！'.success)
-        resolve(true)
+        resolve(res.stdout)
       } else {
         console.log(command + ' 命令执行发生错误'.error)
         console.log(res.stderr)
         console.log('请检查远端环境中该命令是否有效！'.warn)
-        reject('false')
+        reject('error')
       }
     })
   })

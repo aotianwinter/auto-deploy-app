@@ -44,7 +44,6 @@ npm run deploy # 本地运行
 /*
 config.js
 说明：
-  请确保解压后的文件目录为dist
   ssh: 连接服务器用户信息
   distDir: 需要压缩的文件目录（启用本地压缩后生效）
   openBackUp: 开启后，若远端存在相同目录，则会修改原始目录名称，不会直接覆盖
