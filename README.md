@@ -106,7 +106,7 @@ const config = [
     // 以下为docker模式下使用配置
     docker_file: './Dockerfile_nginx/Dockerfile', // Dockerfile文件位置🔶
     sourceDir: 'E:/Private/my-picture-online', // web源码目录🔷
-    exclude: [ //  源码目录中 默认排除 node_modules, dist, .git🔷
+    exclude: [ //  源码目录中 默认排除上传 node_modules, dist, .git🔷
       'node_modules',
       'dist',
       '.git',
