@@ -2,9 +2,11 @@
 async function uploadFile (ssh, localFile, serverFile) {
   return new Promise((resolve, reject) => {
     ssh.putFile(localFile, serverFile).then(async () => {
-      resolve(console.log('文件上传完成'.success))
+      console.log('文件上传完成'.success)
+      resolve()
     }, (err) => {
-      reject(console.log('文件上传失败！'.error, err))
+      console.log('文件上传失败！'.error, err)
+      reject()
     })
   })
 }

@@ -121,5 +121,33 @@ const config = [
   }
 ]
 ```
+## 注意事项
+- 若服务器网速较慢，可提前安装`node`和`nginx`的docker镜像，以便加快后续部署速度
+  - docker pull node:lts-alpine3.12
+  - docker pull socialengine/nginx-spa:latest
+- 若因docker-compose版本过低，导致部署失败
+  - 可降低`docker-compose.yml` version: "2.x"（降为2.0+ 的版本）
+  - 或升级至最新版本`docker-compose`
+- 镜像中会产生`<none>`临时镜像，用于提高下次构建速度，无需删除
+- 请确宿主机端口已开发
 
 ## 示例
+这里选取两种情况进行展示：
+- docker + source build
+- docker-compose + dist
+
+这里以`react`的[在线壁纸](https://github.com/aotianwinter/my-picture-online)为例，服务器已开放8800、8900端口。
+
+1. 首先配置需要部署的项目，
+
+2. 该项目构建后产生`build`文件夹，因此修改`配置文件`和`Dockerfile`，如图
+
+3. 完成部署后，查看镜像和容器信息，和配置的预期结果一致，如图
+
+<!-- 4. 测试页面可正常使用，验证部署成功。 -->
+
+5. 修改 `docker-compose.yml` 端口为8900后，再次进行部署
+
+6. 由于存在同名容器，部署过程中会停止并删除同名容器，之后再次使用最新的镜像启动容器
+
+<!-- 7. 测试页面可正常使用，验证部署成功。 -->

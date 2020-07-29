@@ -65,6 +65,7 @@ async function main () {
     await uploadFile(ssh, getAbsolutePath(BUILD__MODE === 'dist' ? docker_file : docker_file__build), dockerFilePath + '/Dockerfile') // upload Dockerfile
     console.log('5- 开始构建docker镜像...请耐心等待'.bold)
     await runCommand(ssh, `docker build -t ${ image } .`, dockerFilePath)
+    console.log('6- 准备启动docker容器...请耐心等待')
     if (DEPLOY__MODE === 'docker') {
       if ((await runCommand(ssh, `docker ps -f name=${ container_name }`)).indexOf('\n') !== -1) {
         console.log('存在同名容器，正在删除同名容器...')
@@ -76,7 +77,6 @@ async function main () {
       // docker-compose 部署流程 upload docker-compose --> run docker-compose --> show container
       await runCommand(ssh, `docker-compose -v`, '/')
       await uploadFile(ssh, getAbsolutePath(docker_compose), dockerFilePath + '/docker-compose.yml') // upload docker-compose
-      console.log('6- 正在运行docker-compose...请耐心等待')
       if ((await runCommand(ssh, `docker ps -f name=${ container_name }`)).indexOf('\n') !== -1) {
         console.log('存在同名容器，正在删除同名容器...')
         await runCommand(ssh, `docker stop ${ container_name }`, '')

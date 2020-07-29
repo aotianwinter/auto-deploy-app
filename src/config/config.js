@@ -30,7 +30,7 @@ config.js
 
 const config = [
   {
-    name: '临时测试',
+    name: '在线壁纸',
     ssh: {
       host: '120.26.51.81',
       port: 22,
@@ -42,7 +42,7 @@ const config = [
     openBackUp: true, // 是否开启远端备份
     deployDir: '/app' + '/', // 远端部署目录
     releaseDir: 'spa-web', // 发布目录（最终发布目录为/app/spa-app）
-    distDir: 'E:/Private/my-picture-online/dist', // web编译后目录🔶
+    distDir: 'E:/Private/my-picture-online/build', // web编译后目录🔶
     // 以下为docker模式下使用配置
     docker_file: './Dockerfile_nginx/Dockerfile', // Dockerfile文件位置🔶
     sourceDir: 'E:/Private/my-picture-online', // web源码目录🔷
