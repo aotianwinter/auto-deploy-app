@@ -1,0 +1,10 @@
+version: "3.8"
+
+services: 
+  web:
+    # 容器名、镜像名请保持与配置文件一致
+    container_name: spa_web
+    restart: always
+    image: spa/web:dev
+    ports: 
+      - 8900:80

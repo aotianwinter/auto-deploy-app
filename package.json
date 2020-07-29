@@ -5,15 +5,19 @@
   "main": "app.js",
   "dependencies": {
     "archiver": "^3.1.1",
+    "colors": "^1.4.0",
     "inquirer": "^7.0.3",
     "node-ssh": "^7.0.0"
   },
   "devDependencies": {},
   "scripts": {
-    "deploy": "node app.js"
+    "deploy": "node src/app.js"
   },
-  "keywords": [  
-    "node", "front-end", "auto-deploy", "web"
+  "keywords": [
+    "node",
+    "front-end",
+    "auto-deploy",
+    "web"
   ],
   "author": "打酱油",
   "license": "MIT"

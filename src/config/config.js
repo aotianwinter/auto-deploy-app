@@ -1,63 +1,3 @@
-# my-auto-deploy
-🎉Power Design By 打酱油🎉
-## 项目简介
-
-> 该项目是基于`node`实现，支持前端项目进行legacy、docker、docker-compose多种方式的远端自动化部署。
-
-该项目持续更新中，欢迎提交 `pr`及`issues` 😘
-
-**更新：**
-- 🎉现已支持legacy、docker、docker-compose三种部署方式
-- 🎉现已支持 **上传编译后代码部署**、**上传前端源码远端编译部署**两种方式
-（ps：远端编译仅支持docker模式）
-- 现已支持多配置信息，支持部署时选择项目、部署方式、上传编译方式
-- 现已支修改服务器连接端口，支持ssh私钥及解密密码连接
-- 现已支持远端备份，时间格式后缀 `yyyy-MM-dd_HH:mm:ss`
-
-## 支持
-|部署方式|legacy|docker|docker-compose|
-|-------|:----:|:----:|:------------:|
-|本地打包编译dist🔶| ✔|   ✔ |    ✔  |
-|源码远端打包编译🔷|❌|   ✔ |    ✔  |
-
-## 说明
-配置文件(`src/config/config.js`)
-
-🔶上传本地编译后文件夹 (dist)
-
-🔷上传源码远端打包编译 (source)
-
-部署方式说明：
-- legacy（物理部署）
-  - 请将文件上传至`nginx`配置对应目录
-- docker
-  - 端口修改请参照`配置文件` --> ports
-  - 🔶上传dist请参照`配置文件` --> docker_file
-  - 🔷上传source请参照`配置文件` --> docker_file__build
-  - 🔷source中无需上传文件过滤请参照`配置文件` --> exclude
-  - 其他需求可自行修改对应`Dockerfile`
-- docker-compose
-  - `docker-compose.yml`中容器名、镜像名请保持与`配置文件`一致
-  - 端口修改请参照`docker-compose.yml` --> ports
-  - 其他需求可自行修改对应`docker-compose.yml`
-
-## 使用
-Tip：请确保已安装node、npm
-```bash
-npm install # 安装依赖
-npm run deploy # 本地运行
-```
-
-使用流程：
-> 选择项目-->选择部署方式-->选择上传源码or编译后代码-->远端自动部署
-
-## 优点
-- 轻量、便捷、高效
-- 支持legacy、docker、docker-compose多种方式自动部署
-- 支持 多项目管理、多方式连接、本地压缩、远端备份等
-
-## 配置文件说明
-```js
 /*
 config.js
 🔶上传本地编译后文件夹 (dist)
@@ -120,6 +60,5 @@ const config = [
     // `docker-compose.yml`中容器名、镜像名请保持与`配置文件`一致
   }
 ]
-```
 
-## 示例
+module.exports = config
