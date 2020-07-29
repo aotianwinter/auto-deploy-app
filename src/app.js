@@ -26,7 +26,7 @@ async function main () {
       releaseDir,
       docker_file,
       docker_file__build,
-      image_name,
+      image,
       ports,
       docker_compose,
       container_name
@@ -54,21 +54,24 @@ async function main () {
     await runCommand(ssh, 'unzip ' + zipFile, deployDir) // unzip
     await runCommand(ssh, 'mv web ' + releaseDir, deployDir) // 修改文件名称
     await runCommand(ssh, 'rm -f ' + zipFile, deployDir) // clear zip file
-    if (DEPLOY__MODE === 'legacy') return
+    if (DEPLOY__MODE === 'legacy') {
+      console.log(`恭喜！${ name }部署成功`.success)
+      return
+    }
     // docker流程
     // docker 部署流程 docker env check --> upload Dockerfile --> build image
     const dockerFilePath = deployDir + releaseDir
     await runCommand(ssh, `docker -v`, '/')
     await uploadFile(ssh, getAbsolutePath(BUILD__MODE === 'dist' ? docker_file : docker_file__build), dockerFilePath + '/Dockerfile') // upload Dockerfile
     console.log('5- 开始构建docker镜像...请耐心等待'.bold)
-    await runCommand(ssh, `docker build -t ${ image_name } .`, dockerFilePath)
+    await runCommand(ssh, `docker build -t ${ image } .`, dockerFilePath)
     if (DEPLOY__MODE === 'docker') {
       if ((await runCommand(ssh, `docker ps -f name=${ container_name }`)).indexOf('\n') !== -1) {
         console.log('存在同名容器，正在删除同名容器...')
         await runCommand(ssh, `docker stop ${ container_name }`, '')
         await runCommand(ssh, `docker rm ${ container_name }`, '')
       }
-      await runCommand(ssh, `docker run --name ${container_name} -p ${ports} -d ${image_name}`, dockerFilePath)
+      await runCommand(ssh, `docker run --name ${container_name} -p ${ports} -d ${image}`, dockerFilePath)
     } else {
       // docker-compose 部署流程 upload docker-compose --> run docker-compose --> show container
       await runCommand(ssh, `docker-compose -v`, '/')
