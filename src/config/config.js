@@ -30,22 +30,22 @@ config.js
 
 const config = [
   {
-    name: '在线壁纸',
+    name: '示例项目',
     ssh: {
       host: '120.26.51.81',
       port: 22,
       username: 'root',
-      password: 'Zheng668449',
+      password: 'xx',
       // privateKey: 'E:/id_rsa', // ssh私钥(不使用注释即可)
       // passphrase: '123456' // ssh私钥对应解密密码(不存在设为''即可)
     },
     openBackUp: true, // 是否开启远端备份
     deployDir: '/app' + '/', // 远端部署目录
     releaseDir: 'spa-web', // 发布目录（最终发布目录为/app/spa-app）
-    distDir: 'E:/Private/my-picture-online/build', // web编译后目录🔶
+    distDir: 'E:/XX/dist', // web编译后目录🔶
     // 以下为docker模式下使用配置
     docker_file: './Dockerfile_nginx/Dockerfile', // Dockerfile文件位置🔶
-    sourceDir: 'E:/Private/my-picture-online', // web源码目录🔷
+    sourceDir: 'E:/XX', // web源码目录🔷
     exclude: [ //  源码目录中 默认排除上传 node_modules, dist, .git🔷
       'node_modules',
       'dist',
