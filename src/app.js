@@ -52,7 +52,11 @@ async function main () {
     await uploadFile(ssh, localFile, deployDir + zipFile) // upload target file
     // 物理部署 解压、修改、删除文件
     await runCommand(ssh, 'unzip ' + zipFile, deployDir) // unzip
-    await runCommand(ssh, 'mv web ' + releaseDir, deployDir) // 修改文件名称
+    try {
+      await runCommand(ssh, 'mv web ' + releaseDir, deployDir) // 修改文件名称
+    } catch {
+      console.log('可忽略：发布目录与解压后目录相同'.warn)
+    }
     await runCommand(ssh, 'rm -f ' + zipFile, deployDir) // clear zip file
     if (DEPLOY__MODE === 'legacy') {
       console.log(`恭喜！${ name }部署成功`.success)
