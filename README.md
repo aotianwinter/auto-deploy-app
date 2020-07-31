@@ -130,7 +130,7 @@ const config = [
 - 若因docker-compose版本过低，导致部署失败
   - 可降低`docker-compose.yml` version: "2.x"（降为2.0+ 的版本）
   - 或升级至最新版本`docker-compose`
-- 镜像中会产生`<none>`临时镜像，用于提高下次构建速度，无需删除
+- 远端源码编译中会产生`<none>`临时镜像，用于加快下次构建速度，无需删除
 - 请确认宿主机端口已开放
 
 ## 示例

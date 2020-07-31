@@ -4,7 +4,7 @@ const join = require('path').join
 
 function compress (targetDir, localFile, excludeFiles, homeDirName = 'web/') {
   return new Promise((resolve, reject)=>{
-    // 压缩前的准备
+    // filter exclude files
     const filterDir = filterExcludeFiles(targetDir, excludeFiles)
     console.log('正在压缩文件...')
     let output = fs.createWriteStream(localFile) // create file stream write
@@ -18,7 +18,6 @@ function compress (targetDir, localFile, excludeFiles, homeDirName = 'web/') {
       console.error('压缩失败', err)
       reject('Compression failed')
     })
-    // compress error
     archive.on('error', (err) => {
       throw err
     })
