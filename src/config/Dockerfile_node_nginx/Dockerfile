@@ -6,6 +6,8 @@ RUN npm config set registry https://registry.npm.taobao.org
 WORKDIR /tmp/cache
 
 ADD package.json .
+# 存在package-lock.json时启用
+ADD package-lock.json .
 RUN npm install
 
 ADD . .
@@ -13,5 +15,5 @@ ADD . .
 RUN npm run build
 
 FROM socialengine/nginx-spa:latest as nginx
-# /dist 编译后文件夹可自定义
-COPY --from=build /tmp/cache/build /app
+# 编译后文件夹可自定义
+COPY --from=build /tmp/cache/dist /app
