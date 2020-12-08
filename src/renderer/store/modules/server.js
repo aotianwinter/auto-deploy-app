@@ -16,8 +16,34 @@ const actions = {
       if (err) {
         console.log(err)
       } else {
-        console.log(docs)
         commit('GET_SERVER_LIST', docs)
+      }
+    })
+  },
+  addServerList ({ commit }, val) {
+    serverDB.insert({ ...val }, (err, docs) => {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(docs)
+      }
+    })
+  },
+  editServerList ({ commit }, val) {
+    serverDB.update({ _id: val._id }, { ...val }, (err, numReplaced) => {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(numReplaced)
+      }
+    })
+  },
+  deleteServerList ({ commit }, id) {
+    serverDB.remove({ _id: id }, { multi: false }, (err, numRemoved) => {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(numRemoved)
       }
     })
   }

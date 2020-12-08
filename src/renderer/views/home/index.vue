@@ -1,26 +1,34 @@
 <template>
   <div>
-    <a-tabs>
+    <a-tabs v-model="activeKey">
       <a-tab-pane key="1" tab="Tab Main">
         <ServerList></ServerList>
+        <Deploy @switchTaskTab="activeKey = '2'"></Deploy>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="Tab Flow">
-        Content of Tab Pane 2
+      <a-tab-pane key="2" tab="Tab Task">
+        <Task></Task>
       </a-tab-pane>
     </a-tabs>
   </div>
 </template>
 
 <script>
-import serverMixin from '@/store/server-mixin'
 import ServerList from './ServerList'
+import Deploy from './Deploy'
+import Task from './Task'
 export default {
-  mixins: [serverMixin],
+  name: 'Home',
   components: {
-    ServerList
+    ServerList,
+    Deploy,
+    Task
   },
-  created () {
-    this._getServerList()
+  data () {
+    return {
+      activeKey: '1'
+    }
+  },
+  methods: {
   }
 }
 </script>
