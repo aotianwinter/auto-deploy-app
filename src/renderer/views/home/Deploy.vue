@@ -14,8 +14,8 @@
           <a-input v-model="form.name" placeholder="please input your task name" />
         </a-form-item>
         <a-form-item label="server">
-          <a-select v-model="form.region" placeholder="please select your server">
-            <a-select-option v-for="item in serverList" :key="item._id" :value="item._id">
+          <a-select v-model="form.server" placeholder="please select your server">
+            <a-select-option v-for="item in serverList" :key="item._id" :value="item">
               {{ item.name }}
             </a-select-option>
           </a-select>
@@ -26,8 +26,9 @@
 </template>
 <script>
 import serverMixin from '@/store/server-mixin'
+import taskMixin from '@/store/task-mixin'
 export default {
-  mixins: [serverMixin],
+  mixins: [serverMixin, taskMixin],
   name: 'Deploy',
   data () {
     return {
@@ -45,9 +46,10 @@ export default {
     // 提交表单
     submitForm (val) {
       console.log('perpar to deploy')
-      console.log(val)
+      // console.log(val)
       this.visible = false
       this.$emit('switchTaskTab')
+      this._addTaskList(JSON.parse(JSON.stringify(val)))
     }
   }
 }

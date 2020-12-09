@@ -1,13 +1,13 @@
 const state = {
-  taskLog: []
+  logs: []
 }
 
 const mutations = {
-  CLEAN_TASK_LOG (state) {
-    state.taskLog = []
+  CLEAN_LOGS (state) {
+    state.logs = []
   },
-  ADD_TASK_LOG (state, val) {
-    state.taskLog.push(val)
+  ADD_LOGS (state, val) {
+    state.logs.push(val)
   }
 }
 

@@ -3,15 +3,15 @@ import { mapState } from 'vuex'
 const terminalMixin = {
   computed: {
     ...mapState({
-      taskLog: state => state.terminal.taskLog
+      logs: state => state.terminal.logs
     })
   },
   methods: {
-    _cleanTaskLog () {
-      this.$store.commit('CLEAN_TASK_LOG')
+    _cleanLogs () {
+      this.$store.commit('CLEAN_LOGS')
     },
-    _addTaskLog (val) {
-      this.$store.commit('ADD_TASK_LOG', val)
+    _addLogs (val) {
+      this.$store.commit('ADD_LOGS', val)
     }
   }
 }

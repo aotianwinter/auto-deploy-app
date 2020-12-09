@@ -3,8 +3,11 @@ const state = {
 }
 
 const mutations = {
-  CHANGE_TASK_LOG (state) {
+  CLEAN_TASK_LIST (state) {
     state.taskList = []
+  },
+  ADD_TASK_LIST (state, val) {
+    state.taskList.push(val)
   }
 }
 

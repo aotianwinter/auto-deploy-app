@@ -2,7 +2,7 @@
   <div class="page-wrap">
     <!-- task log -->
     <div class="task-log-wrap">
-      <p v-for="(item, index) in taskLog" :key="index">
+      <p v-for="(item, index) in logs" :key="index">
         {{ item }}
       </p>
     </div>
@@ -12,13 +12,21 @@
 </template>
 <script>
 import terminalMixin from '@/store/terminal-mixin'
+import taskMixin from '@/store/task-mixin'
 
 export default {
   name: 'Task',
-  mixins: [terminalMixin],
+  mixins: [terminalMixin, taskMixin],
+  watch: {
+    taskList () {
+      if (this.taskList.length) {
+        console.log(this.taskList)
+      }
+    }
+  },
   methods: {
     test () {
-      this._addTaskLog('aaa')
+      this._addLogs('aaa')
     }
   }
 }
@@ -30,4 +38,5 @@ export default {
     background black
     height 500px
     overflow-y auto
+    padding 1rem
 </style>
