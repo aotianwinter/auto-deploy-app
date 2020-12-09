@@ -15,7 +15,7 @@
         </a-form-item>
         <a-form-item label="server">
           <a-select v-model="form.server" placeholder="please select your server">
-            <a-select-option v-for="item in serverList" :key="item._id" :value="item">
+            <a-select-option v-for="item in serverList" :key="item._id" :value="item._id">
               {{ item.name }}
             </a-select-option>
           </a-select>
@@ -46,10 +46,16 @@ export default {
     // 提交表单
     submitForm (val) {
       console.log('perpar to deploy')
-      // console.log(val)
-      this.visible = false
       this.$emit('switchTaskTab')
-      this._addTaskList(JSON.parse(JSON.stringify(val)))
+      const submitForm = JSON.parse(JSON.stringify(val))
+      this.visible = false
+      for (let item of this.serverList) {
+        if (item._id === submitForm.server) {
+          submitForm.server = item
+        }
+      }
+      // console.log(submitForm)
+      this._addTaskList(JSON.parse(JSON.stringify(submitForm)))
     }
   }
 }

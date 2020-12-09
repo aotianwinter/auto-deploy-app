@@ -13,20 +13,33 @@
 <script>
 import terminalMixin from '@/store/terminal-mixin'
 import taskMixin from '@/store/task-mixin'
-
+const { NodeSSH } = require('node-ssh')
 export default {
   name: 'Task',
   mixins: [terminalMixin, taskMixin],
   watch: {
-    taskList () {
-      if (this.taskList.length) {
-        console.log(this.taskList)
-      }
+    taskList: {
+      handler (newVal, oldVal) {
+        if (newVal.length > 0) {
+          const sshInfo = JSON.parse(JSON.stringify(newVal[0].server))
+          this._cleanTaskList()
+          const ssh = new NodeSSH()
+          this._connectServe(ssh, sshInfo)
+        }
+      },
+      immediate: true
+
     }
   },
   methods: {
     test () {
-      this._addLogs('aaa')
+      // if (this.taskList.length > 0) {
+      //   const sshInfo = JSON.parse(JSON.stringify(this.taskList[0].server))
+      //   // console.log(sshInfo)
+      //   this._cleanTaskList()
+      //   const ssh = new NodeSSH()
+      //   this._connectServe(ssh, sshInfo)
+      // }
     }
   }
 }
