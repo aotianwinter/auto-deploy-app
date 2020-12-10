@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-button @click="showAddForm">deploy</a-button>
+    <a-button @click="showAddForm" type="dashed">deploy</a-button>
     <!-- modal -->
     <a-modal
       title="Create Task For Deploy"

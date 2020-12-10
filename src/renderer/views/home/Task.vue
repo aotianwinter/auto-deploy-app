@@ -1,9 +1,16 @@
 <template>
   <div class="page-wrap">
     <!-- task log -->
-    <a-collapse defaultActiveKey="0">
-      <a-collapse-panel v-for="(item, index) in executingTaskList" :key="index"
-        :header="`Task ${index + 1}`">
+    <a-collapse defaultActiveKey="0" v-if="executingTaskList.length > 0">
+      <a-collapse-panel v-for="(item, index) in executingTaskList" :key="index">
+        <template #header>
+          {{ `Task ${index + 1} ${item.server.name}` }}
+          <a-icon type="clock-circle" />
+          {{ `${item.createdTime}` }}
+        </template>
+        <template #extra>
+          <a-icon type="save" />
+        </template>
         <div class="task-log-wrap">
           <p v-for="(logItem, logIndex) in item.logs" :key="logIndex" :style="{ color: logLevelOptions[logItem.type].color }">
             {{ logItem.msg }}
@@ -11,6 +18,7 @@
         </div>
       </a-collapse-panel>
     </a-collapse>
+    <a-empty v-else />
     <!-- action -->
   </div>
 </template>
@@ -43,7 +51,7 @@ export default {
       this._addExecutingTaskQueue(task, taskId)
       const ssh = new NodeSSH()
       await this._connectServe(ssh, task.server, taskId)
-      if (task.postCommond) this._runCommand(ssh, task.postCommond, taskId)
+      if (task.postCommond) this._runCommand(ssh, task.postCommond, '/home/onpremise', taskId)
     }
   }
 }
@@ -56,4 +64,7 @@ export default {
     height 500px
     overflow-y auto
     padding 1rem
+
+.anticon
+  margin-left 6px
 </style>

@@ -4,16 +4,19 @@
     <a-card title="Server List" style="width: 500px"
       :bodyStyle="{ height: '500px', 'overflow-y': 'auto'}">
       <template #extra>
-        <a-button type="link" @click="showAddForm">add</a-button>
+        <a-icon type="file-add" @click="showAddForm" />
       </template>
       <a-collapse>
-        <a-collapse-panel v-for="item in serverList" :key="item._id"
-          :header="item.name || 'none'">
-          <p>{{ item }}</p>
-          <template #extra>
-            <a-button type="link" @click.stop="showEditForm(item)">edit</a-button>
-            <a-button type="link" @click.stop="deleteForm(item)">delete</a-button>
+        <a-collapse-panel v-for="item in serverList" :key="item._id">
+          <template #header>
+            <!-- <a-avatar>{{ item.name.substring(0, 2) }}</a-avatar> -->
+            {{ item.name }}
           </template>
+          <template #extra>
+            <a-icon @click.stop="showEditForm(item)" type="edit" />
+            <a-icon @click.stop="deleteForm(item)" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+          </template>
+          <p>{{ item }}</p>
         </a-collapse-panel>
       </a-collapse>
     </a-card>
@@ -108,4 +111,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.anticon
+  margin-left 6px
+  font-size 18px
 </style>

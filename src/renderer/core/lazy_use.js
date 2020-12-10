@@ -2,6 +2,7 @@ import Vue from 'vue'
 import 'ant-design-vue/dist/antd.css'
 // base library
 import {
+  Empty,
   Collapse,
   ConfigProvider,
   Layout,
@@ -57,6 +58,7 @@ import {
 // import PermissionHelper from '@/core/permission/permission'
 // import './directives/action'
 
+Vue.use(Empty)
 Vue.use(Collapse)
 Vue.use(ConfigProvider)
 Vue.use(Layout)
