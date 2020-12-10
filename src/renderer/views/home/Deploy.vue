@@ -20,11 +20,16 @@
             </a-select-option>
           </a-select>
         </a-form-item>
+        <a-form-item label="post commond">
+          <a-input v-model="form.postCommond" placeholder="please input your post commond" />
+        </a-form-item>
       </a-form>
     </a-modal>
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
+
 import serverMixin from '@/store/server-mixin'
 import taskMixin from '@/store/task-mixin'
 export default {
@@ -54,8 +59,8 @@ export default {
           submitForm.server = item
         }
       }
-      // console.log(submitForm)
-      this._addTaskList(JSON.parse(JSON.stringify(submitForm)))
+      submitForm.createdTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+      this._addPendingTaskList(JSON.parse(JSON.stringify(submitForm)))
     }
   }
 }

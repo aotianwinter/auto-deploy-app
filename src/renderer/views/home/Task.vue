@@ -1,45 +1,49 @@
 <template>
   <div class="page-wrap">
     <!-- task log -->
-    <div class="task-log-wrap">
-      <p v-for="(item, index) in logs" :key="index">
-        {{ item }}
-      </p>
-    </div>
+    <a-collapse defaultActiveKey="0">
+      <a-collapse-panel v-for="(item, index) in executingTaskList" :key="index"
+        :header="`Task ${index + 1}`">
+        <div class="task-log-wrap">
+          <p v-for="(logItem, logIndex) in item.logs" :key="logIndex" :style="{ color: logLevelOptions[logItem.type].color }">
+            {{ logItem.msg }}
+          </p>
+        </div>
+      </a-collapse-panel>
+    </a-collapse>
     <!-- action -->
-    <a-button @click="test">add</a-button>
   </div>
 </template>
 <script>
-import terminalMixin from '@/store/terminal-mixin'
+import { v4 as uuidv4 } from 'uuid'
+
 import taskMixin from '@/store/task-mixin'
 const { NodeSSH } = require('node-ssh')
 export default {
   name: 'Task',
-  mixins: [terminalMixin, taskMixin],
+  mixins: [taskMixin],
+  data () {
+    return {
+    }
+  },
   watch: {
-    taskList: {
+    pendingTaskList: {
       handler (newVal, oldVal) {
         if (newVal.length > 0) {
-          const sshInfo = JSON.parse(JSON.stringify(newVal[0].server))
-          this._cleanTaskList()
-          const ssh = new NodeSSH()
-          this._connectServe(ssh, sshInfo)
+          this.test(JSON.parse(JSON.stringify(newVal[0])))
+          this._popPendingTaskList()
         }
       },
       immediate: true
-
     }
   },
   methods: {
-    test () {
-      // if (this.taskList.length > 0) {
-      //   const sshInfo = JSON.parse(JSON.stringify(this.taskList[0].server))
-      //   // console.log(sshInfo)
-      //   this._cleanTaskList()
-      //   const ssh = new NodeSSH()
-      //   this._connectServe(ssh, sshInfo)
-      // }
+    async test (task) {
+      const taskId = uuidv4().replace(/-/g, '')
+      this._addExecutingTaskQueue(task, taskId)
+      const ssh = new NodeSSH()
+      await this._connectServe(ssh, task.server, taskId)
+      if (task.postCommond) this._runCommand(ssh, task.postCommond, taskId)
     }
   }
 }
