@@ -4,10 +4,11 @@ const state = {
    * executingTaskQueue
    * {
    *   taskId: {
+   *       status: 'running',
    *       logs: {
    *            type: 'info',
    *            msg: 'hello'
-   *         },
+   *       },
    *       postCommand: ''
    *   }
    * }
@@ -22,21 +23,21 @@ const mutations = {
   ADD_PENDING_TASK_LIST (state, val) {
     state.pendingTaskList.push(val)
   },
-  ADD_EXECUTING_TASK_QUEUE (state, val) {
-    // state.executingTaskQueue[val.taskId] = val.task
-    state.executingTaskQueue = Object.assign({}, state.executingTaskQueue, { [val.taskId]: val.task })
+  ADD_EXECUTING_TASK_QUEUE (state, { taskId, task }) {
+    state.executingTaskQueue = Object.assign({}, state.executingTaskQueue,
+      { [taskId]: { ...task, status: 'running' } })
   },
-  ADD_TASK_LOG (state, val) {
-    // TODO 无法触发更新
-    if (state.executingTaskQueue[val.taskId]) {
-      if (state.executingTaskQueue[val.taskId].logs && state.executingTaskQueue[val.taskId].logs.constructor === Array) {
-        state.executingTaskQueue[val.taskId].logs.push(val.log)
+  CHANGE_TASK_STATUS (state, { taskId, status }) {
+    if (state.executingTaskQueue[taskId]) {
+      state.executingTaskQueue[taskId].status = status
+    }
+  },
+  ADD_TASK_LOG (state, { taskId, log }) {
+    if (state.executingTaskQueue[taskId]) {
+      if (state.executingTaskQueue[taskId].logs && state.executingTaskQueue[taskId].logs.constructor === Array) {
+        state.executingTaskQueue[taskId].logs.push(log)
       } else {
-        // task.logs = []
-        state.executingTaskQueue[val.taskId] =
-          Object.assign({}, state.executingTaskQueue[val.taskId], { logs: [val.log] })
-        // task.logs.push(val.log)
-        // console.log(state.executingTaskQueue[val.taskId])
+        state.executingTaskQueue[taskId] = Object.assign({}, state.executingTaskQueue[taskId], { logs: [log] })
       }
     }
   }

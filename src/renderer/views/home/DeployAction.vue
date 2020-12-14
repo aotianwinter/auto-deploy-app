@@ -20,6 +20,15 @@
             </a-select-option>
           </a-select>
         </a-form-item>
+        <a-form-item label="deploy path">
+          <a-input v-model="form.serverPath" placeholder="the deploy path in server" />
+        </a-form-item>
+        <a-form-item label="project path">
+          <a-button @click="handleSelectDir">
+            <a-icon type="upload" />Click Project Dir
+          </a-button>
+          <p>{{ form.projectPath }}</p>
+        </a-form-item>
         <a-form-item label="post commond">
           <a-input v-model="form.postCommond" placeholder="please input your post commond" />
         </a-form-item>
@@ -32,9 +41,10 @@ import dayjs from 'dayjs'
 
 import serverMixin from '@/store/server-mixin'
 import taskMixin from '@/store/task-mixin'
+const { dialog } = require('electron').remote
 export default {
   mixins: [serverMixin, taskMixin],
-  name: 'Deploy',
+  name: 'DeployAction',
   data () {
     return {
       visible: false,
@@ -61,6 +71,16 @@ export default {
       }
       submitForm.createdTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
       this._addPendingTaskList(JSON.parse(JSON.stringify(submitForm)))
+    },
+    // 选择文件
+    handleSelectDir (evt) {
+      const paths = dialog.showOpenDialog({
+        title: 'select project path',
+        properties: ['openDirectory']
+      })
+      if (paths && paths.length > 0) {
+        this.$set(this.form, 'projectPath', paths[0])
+      }
     }
   }
 }

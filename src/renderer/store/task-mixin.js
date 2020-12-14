@@ -17,6 +17,20 @@ const taskMixin = {
         error: {
           color: '#F56C6C'
         }
+      },
+      taskStatusOptions: {
+        passed: {
+          color: 'green',
+          desc: 'passed'
+        },
+        failed: {
+          color: 'red',
+          desc: 'failed'
+        },
+        running: {
+          color: 'blue',
+          desc: 'running'
+        }
       }
     }
   },
@@ -39,7 +53,7 @@ const taskMixin = {
       this.$store.commit('ADD_PENDING_TASK_LIST', JSON.parse(JSON.stringify(val)))
     },
     // add task to executing task queue
-    _addExecutingTaskQueue (val, taskId) {
+    _addExecutingTaskQueue (taskId, val) {
       this.$store.commit('ADD_EXECUTING_TASK_QUEUE', {
         taskId,
         task: JSON.parse(JSON.stringify(val))
@@ -55,6 +69,13 @@ const taskMixin = {
         }
       })
     },
+    // change task status by task id
+    _changeTaskStatusByTaskId (taskId, status = 'running') {
+      this.$store.commit('CHANGE_TASK_STATUS', {
+        taskId,
+        status
+      })
+    },
     // ssh connect (ssh对象、ssh连接信息、taskId)
     _connectServe (ssh, sshInfo, taskId) {
       return new Promise((resolve, reject) => {
@@ -67,8 +88,6 @@ const taskMixin = {
           this._addTaskLogByTaskId(taskId, err, 'error')
           reject(err)
         })
-      }).catch(e => {
-        console.log(e)
       })
     },
     // run linux shell (ssh对象、shell指令、执行路径、taskId)
@@ -90,8 +109,6 @@ const taskMixin = {
         }).catch(err => {
           reject(err)
         })
-      }).catch(e => {
-        console.log(e)
       })
     }
   }

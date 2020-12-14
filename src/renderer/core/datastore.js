@@ -7,7 +7,7 @@ export const serverDB = new Datastore({
   filename: path.join(remote.app.getPath('userData'), '/server.db')
 })
 
-// export const projectDB = new Datastore({
-//   autoload: true,
-//   filename: path.join(remote.app.getPath('userData'), '/project.db')
-// })
+export const deployInstanceDB = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/deployInstance.db')
+})

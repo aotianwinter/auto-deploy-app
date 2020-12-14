@@ -1,12 +1,15 @@
 <template>
   <div>
     <a-tabs v-model="activeKey">
-      <a-tab-pane key="1" tab="Tab Main">
+      <a-tab-pane key="1" tab="Server Center">
         <ServerList></ServerList>
-        <Deploy @switchTaskTab="activeKey = '2'"></Deploy>
+        <DeployAction @switchTaskTab="activeKey = '2'"></DeployAction>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="Tab Task">
+      <a-tab-pane key="2" tab="Task Center">
         <Task></Task>
+      </a-tab-pane>
+      <a-tab-pane key="3" tab="Deploy Instance">
+        <DeployInstanceList></DeployInstanceList>
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -14,14 +17,17 @@
 
 <script>
 import ServerList from './ServerList'
-import Deploy from './Deploy'
+import DeployAction from './DeployAction'
 import Task from './Task'
+import DeployInstanceList from './DeployInstanceList'
+
 export default {
   name: 'Home',
   components: {
     ServerList,
-    Deploy,
-    Task
+    DeployAction,
+    Task,
+    DeployInstanceList
   },
   data () {
     return {

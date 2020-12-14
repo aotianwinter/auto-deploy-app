@@ -14,7 +14,7 @@
           </template>
           <template #extra>
             <a-icon @click.stop="showEditForm(item)" type="edit" />
-            <a-icon @click.stop="deleteForm(item)" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+            <a-icon @click.stop="deleteForm(item._id)" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
           </template>
           <p>{{ item }}</p>
         </a-collapse-panel>
@@ -52,8 +52,8 @@
 <script>
 import serverMixin from '@/store/server-mixin'
 export default {
-  mixins: [serverMixin],
   name: 'ServerList',
+  mixins: [serverMixin],
   data () {
     return {
       visible: false,
@@ -88,7 +88,7 @@ export default {
       this.confirmLoading = false
     },
     // 删除信息
-    deleteForm (val) {
+    deleteForm (_id) {
       const _this = this
       this.$confirm({
         title: 'Are you sure delete this info?',
@@ -98,7 +98,7 @@ export default {
         okType: 'danger',
         cancelText: 'No',
         async onOk () {
-          await _this._deleteServerList(val._id)
+          await _this._deleteServerList(_id)
           _this._getServerList()
         },
         onCancel () {
