@@ -62,15 +62,15 @@ export default {
     submitForm (val) {
       console.log('perpar to deploy')
       this.$emit('switchTaskTab')
-      const submitForm = JSON.parse(JSON.stringify(val))
+      const task = JSON.parse(JSON.stringify(val))
       this.visible = false
       for (let item of this.serverList) {
-        if (item._id === submitForm.server) {
-          submitForm.server = item
+        if (item._id === task.server) {
+          task.server = item
         }
       }
-      submitForm.createdTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
-      this._addPendingTaskList(JSON.parse(JSON.stringify(submitForm)))
+      task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+      this._addPendingTaskList(JSON.parse(JSON.stringify(task)))
     },
     // 选择文件
     handleSelectDir (evt) {

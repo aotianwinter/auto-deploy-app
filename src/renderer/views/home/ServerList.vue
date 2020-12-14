@@ -14,7 +14,12 @@
           </template>
           <template #extra>
             <a-icon @click.stop="showEditForm(item)" type="edit" />
-            <a-icon @click.stop="deleteForm(item._id)" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+            <a-popconfirm
+              title="Sure to delete?"
+              @confirm="() => onDelete(item._id)"
+            >
+              <a-icon @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+            </a-popconfirm>
           </template>
           <p>{{ item }}</p>
         </a-collapse-panel>
@@ -88,23 +93,9 @@ export default {
       this.confirmLoading = false
     },
     // 删除信息
-    deleteForm (_id) {
-      const _this = this
-      this.$confirm({
-        title: 'Are you sure delete this info?',
-        // icon: createVNode(ExclamationCircleOutlined),
-        content: 'can not ...',
-        okText: 'Yes',
-        okType: 'danger',
-        cancelText: 'No',
-        async onOk () {
-          await _this._deleteServerList(_id)
-          _this._getServerList()
-        },
-        onCancel () {
-          console.log('Cancel')
-        }
-      })
+    async onDelete (_id) {
+      await this._deleteServerList(_id)
+      this._getServerList()
     }
   }
 }

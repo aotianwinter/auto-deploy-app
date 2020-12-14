@@ -10,10 +10,21 @@
           </a-tag>
           {{ item.server.name }}
           <a-icon type="clock-circle" />
-          {{ `${item.createdTime}` }}
+          {{ `${item.lastExecutedTime}` }}
         </template>
         <template #extra>
-          <a-icon @click.stop="saveDeployInstance(item)" type="save" />
+          <a-popconfirm
+            title="Sure to save?"
+            @confirm="() => saveDeployInstance(item)"
+          >
+            <a-icon @click.stop="" type="save" />
+          </a-popconfirm>
+          <a-popconfirm
+            title="Sure to delete?"
+            @confirm="() => onDelete(item.taskId)"
+          >
+            <a-icon @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+          </a-popconfirm>
         </template>
         <div class="task-log-wrap">
           <p v-for="(logItem, logIndex) in item.logs" :key="logIndex" :style="{ color: logLevelOptions[logItem.type].color }">
@@ -54,12 +65,14 @@ export default {
     async handleTask (task) {
       const taskId = uuidv4().replace(/-/g, '')
       try {
-        this._addExecutingTaskQueue(taskId, task)
+        this._addExecutingTaskQueue(taskId, { ...task, taskId })
         const ssh = new NodeSSH()
         await this._connectServe(ssh, task.server, taskId)
-        if (task.postCommond) this._runCommand(ssh, task.postCommond, '/home/onpremise', taskId)
+        if (task.postCommond) await this._runCommand(ssh, task.postCommond, '/home/onpremise', taskId)
+        this._addTaskLogByTaskId(taskId, '🎉恭喜，所有任务已执行完成！🎉', 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
       } catch (error) {
+        this._addTaskLogByTaskId(taskId, '❌任务执行中发生错误，请修改后再次尝试！❌', 'error')
         this._changeTaskStatusByTaskId(taskId, 'failed')
         console.log(error)
       }
@@ -68,6 +81,9 @@ export default {
       const deployInstance = JSON.parse(JSON.stringify(task))
       if (deployInstance.logs) delete deployInstance.logs
       this._addDeployInstanceList(deployInstance)
+    },
+    onDelete (taskId) {
+      if (taskId) this._removeExecutingTaskQueue(taskId)
     }
   }
 }

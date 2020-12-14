@@ -40,7 +40,7 @@ const taskMixin = {
       executingTaskQueue: state => state.task.executingTaskQueue
     }),
     executingTaskList () {
-      return _.orderBy(this.executingTaskQueue, ['createdTime'], ['asc'])
+      return _.orderBy(this.executingTaskQueue, ['lastExecutedTime'], ['asc'])
     }
   },
   methods: {
@@ -57,6 +57,12 @@ const taskMixin = {
       this.$store.commit('ADD_EXECUTING_TASK_QUEUE', {
         taskId,
         task: JSON.parse(JSON.stringify(val))
+      })
+    },
+    // remove task to executing task queue
+    _removeExecutingTaskQueue (taskId) {
+      this.$store.commit('REMOVE_EXECUTING_TASK_QUEUE', {
+        taskId
       })
     },
     // add task log by task id

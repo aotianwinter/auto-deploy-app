@@ -9,7 +9,7 @@
         <Task></Task>
       </a-tab-pane>
       <a-tab-pane key="3" tab="Deploy Instance">
-        <DeployInstanceList></DeployInstanceList>
+        <DeployInstanceList @switchTaskTab="activeKey = '2'"></DeployInstanceList>
       </a-tab-pane>
     </a-tabs>
   </div>

@@ -27,6 +27,12 @@ const mutations = {
     state.executingTaskQueue = Object.assign({}, state.executingTaskQueue,
       { [taskId]: { ...task, status: 'running' } })
   },
+  REMOVE_EXECUTING_TASK_QUEUE (state, { taskId }) {
+    if (state.executingTaskQueue[taskId]) {
+      delete state.executingTaskQueue[taskId]
+      state.executingTaskQueue = Object.assign({}, state.executingTaskQueue, {})
+    }
+  },
   CHANGE_TASK_STATUS (state, { taskId, status }) {
     if (state.executingTaskQueue[taskId]) {
       state.executingTaskQueue[taskId].status = status

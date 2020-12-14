@@ -6,7 +6,7 @@
         <a-popconfirm
           v-if="deployInstanceList.length"
           title="Sure to run task?"
-          @confirm="() => _deleteDeployInstanceList(record._id)"
+          @confirm="() => onRunTask(record)"
         >
           <a-icon type="thunderbolt" theme="twoTone" />
         </a-popconfirm>
@@ -23,11 +23,13 @@
 </template>
 
 <script>
-import deployInstanceMixin from '@/store/deploy-instance-mixin'
+import dayjs from 'dayjs'
 
+import taskMixin from '@/store/task-mixin'
+import deployInstanceMixin from '@/store/deploy-instance-mixin'
 export default {
   name: 'DeployInstanceList',
-  mixins: [deployInstanceMixin],
+  mixins: [taskMixin, deployInstanceMixin],
   data () {
     return {
       columns: [
@@ -52,8 +54,8 @@ export default {
           title: '后置命令'
         },
         {
-          dataIndex: 'createdTime',
-          title: '创建时间'
+          dataIndex: 'lastExecutedTime',
+          title: '上次执行时间'
         },
         {
           title: '操作',
@@ -67,9 +69,18 @@ export default {
     this._getDeployInstanceList()
   },
   methods: {
+    // on click delete
     async onDelete (_id) {
       await this._deleteDeployInstanceList(_id)
       this._getDeployInstanceList()
+    },
+    // on run task
+    onRunTask (val) {
+      console.log('perpar to deploy')
+      this.$emit('switchTaskTab')
+      const task = JSON.parse(JSON.stringify(val))
+      task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+      this._addPendingTaskList(JSON.parse(JSON.stringify(task)))
     }
   }
 }
