@@ -71,10 +71,24 @@ export default {
         if (task.postCommond) await this._runCommand(ssh, task.postCommond, '/home/onpremise', taskId)
         this._addTaskLogByTaskId(taskId, '🎉恭喜，所有任务已执行完成！🎉', 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
+        // if task in deploy instance list finshed then update status
+        if (task._id) {
+          this._editDeployInstanceList({
+            ...task,
+            status: 'passed'
+          })
+        }
       } catch (error) {
         this._addTaskLogByTaskId(taskId, '❌任务执行中发生错误，请修改后再次尝试！❌', 'error')
         this._changeTaskStatusByTaskId(taskId, 'failed')
         console.log(error)
+        // if task in deploy instance list finshed then update status
+        if (task._id) {
+          this._editDeployInstanceList({
+            ...task,
+            status: 'failed'
+          })
+        }
       }
     },
     saveDeployInstance (task) {

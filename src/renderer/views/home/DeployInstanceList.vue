@@ -2,6 +2,11 @@
   <div>
     <!-- table -->
     <a-table :columns="columns" rowKey="_id" :data-source="deployInstanceList">
+      <span slot="status" slot-scope="status">
+        <a-tag :color="taskStatusOptions[status].color">
+          {{ taskStatusOptions[status].desc }}
+        </a-tag>
+      </span>
       <span slot="action" slot-scope="text, record">
         <a-popconfirm
           v-if="deployInstanceList.length"
@@ -58,15 +63,17 @@ export default {
           title: '上次执行时间'
         },
         {
+          dataIndex: 'status',
+          title: '上次执行状态',
+          scopedSlots: { customRender: 'status' }
+        },
+        {
           title: '操作',
           key: 'action',
           scopedSlots: { customRender: 'action' }
         }
       ]
     }
-  },
-  created () {
-    this._getDeployInstanceList()
   },
   methods: {
     // on click delete

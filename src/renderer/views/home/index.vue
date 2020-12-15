@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-tabs v-model="activeKey">
+    <a-tabs v-model="activeKey" @change="onChangeTab">
       <a-tab-pane key="1" tab="Server Center">
         <ServerList></ServerList>
         <DeployAction @switchTaskTab="activeKey = '2'"></DeployAction>
@@ -20,9 +20,11 @@ import ServerList from './ServerList'
 import DeployAction from './DeployAction'
 import Task from './Task'
 import DeployInstanceList from './DeployInstanceList'
+import deployInstanceMixin from '@/store/deploy-instance-mixin'
 
 export default {
   name: 'Home',
+  mixins: [deployInstanceMixin],
   components: {
     ServerList,
     DeployAction,
@@ -35,6 +37,13 @@ export default {
     }
   },
   methods: {
+    onChangeTab (activeKey) {
+      switch (activeKey) {
+        case '3':
+          this._getDeployInstanceList()
+          break
+      }
+    }
   }
 }
 </script>
