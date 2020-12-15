@@ -7,7 +7,7 @@
           <a-tag :color="taskStatusOptions[item.status].color">
             {{ taskStatusOptions[item.status].desc }}
           </a-tag>
-          {{ item.server.name }}
+          {{ item.server && item.server.name }}
           <a-icon type="clock-circle" />
           {{ `${item.lastExecutedTime}` }}
         </template>
@@ -81,10 +81,14 @@ export default {
     // 处理任务
     async handleTask (taskId, task) {
       try {
+        this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
         const ssh = new NodeSSH()
+        // compress dir
+        if (task.projectPath) await this._compress(task.projectPath, 'dist.zip', [], 'dist/', taskId)
+        // ssh connect
         await this._connectServe(ssh, task.server, taskId)
-        if (task.postCommond) await this._runCommand(ssh, task.postCommond, '/home/onpremise', taskId)
-        this._addTaskLogByTaskId(taskId, '🎉恭喜，所有任务已执行完成！🎉', 'success')
+        if (task.postCommond) await this._runCommand(ssh, task.postCommond, '/', taskId)
+        this._addTaskLogByTaskId(taskId, '🎉恭喜，所有任务已执行完成！', 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
         // if task in deploy instance list finshed then update status
         if (task._id) {
@@ -94,7 +98,7 @@ export default {
           })
         }
       } catch (error) {
-        this._addTaskLogByTaskId(taskId, '❌任务执行中发生错误，请修改后再次尝试！❌', 'error')
+        this._addTaskLogByTaskId(taskId, '❌任务执行中发生错误，请修改后再次尝试！', 'error')
         this._changeTaskStatusByTaskId(taskId, 'failed')
         console.log(error)
         // if task in deploy instance list finshed then update status
@@ -129,7 +133,7 @@ export default {
       const { taskId } = task
       this.deployActionVisible = false
       this._changeTaskByTaskId(taskId, task)
-      this._addTaskLogByTaskId(taskId, '⚡即将执行更新后的任务...⚡', 'primary')
+      this._addTaskLogByTaskId(taskId, '⚡即将执行更新后的任务...', 'primary')
       this.handleTask(taskId, task)
     }
   }

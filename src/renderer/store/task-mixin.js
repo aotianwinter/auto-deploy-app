@@ -1,5 +1,9 @@
 import { mapState } from 'vuex'
+import { remote } from 'electron'
 const _ = require('lodash')
+const fs = require('fs')
+const join = require('path').join
+const archiver = require('archiver')
 
 const taskMixin = {
   data () {
@@ -125,6 +129,48 @@ const taskMixin = {
         }).catch(err => {
           reject(err)
         })
+      })
+    },
+    // compress dir (目标压缩文件、本地保存文件、排除文件列表、外层文件夹名称)
+    _compress (targetDir, localFile, excludeFiles, homeDirName = 'dist/', taskId) {
+      return new Promise((resolve, reject) => {
+        // prepare before compress
+        const filterDir = this._filterExcludeFiles(targetDir, excludeFiles)
+        this._addTaskLogByTaskId(taskId, '⏳正在压缩文件...')
+        let output = fs.createWriteStream(join(remote.app.getPath('userData'), '/' + localFile)) // create file stream write
+        const archive = archiver('zip', {
+          zlib: { level: 9 } // set compress level
+        })
+        output.on('close', () => {
+          this._addTaskLogByTaskId(taskId,
+            '压缩完成！共计' + (archive.pointer() / 1024 / 1024).toFixed(3) + 'MB', 'success')
+          resolve('Compression complete')
+        }).on('error', (err) => {
+          this._addTaskLogByTaskId(taskId, '压缩失败', 'error')
+          this._addTaskLogByTaskId(taskId, err, 'error')
+          reject(err)
+        })
+        archive.on('error', (err) => {
+          throw err // throw error
+        })
+        archive.pipe(output) // save file by pipe
+        // append file and dir
+        filterDir.forEach(file => {
+          const filePath = join(targetDir, file)
+          const stat = fs.statSync(filePath)
+          if (stat.isDirectory()) {
+            archive.directory(filePath, homeDirName + file)
+          } else {
+            archive.file(filePath, { name: file, prefix: homeDirName })
+          }
+        })
+        archive.finalize() // make sure file stream write completely
+      })
+    },
+    // filter exclude files in dir
+    _filterExcludeFiles (targetDir, excludeFiles = []) {
+      return fs.readdirSync(targetDir).filter(file => {
+        return (!excludeFiles.includes(file))
       })
     }
   }
