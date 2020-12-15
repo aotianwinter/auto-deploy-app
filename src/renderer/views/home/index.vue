@@ -3,7 +3,9 @@
     <a-tabs v-model="activeKey" @change="onChangeTab">
       <a-tab-pane key="1" tab="Server Center">
         <ServerList></ServerList>
-        <DeployAction @switchTaskTab="activeKey = '2'"></DeployAction>
+        <a-button @click="showAddForm" type="dashed">deploy</a-button>
+        <DeployAction :data="{}" :visible="deployActionVisible"
+          @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">
         <Task></Task>
@@ -20,11 +22,12 @@ import ServerList from './ServerList'
 import DeployAction from './DeployAction'
 import Task from './Task'
 import DeployInstanceList from './DeployInstanceList'
+import taskMixin from '@/store/task-mixin'
 import deployInstanceMixin from '@/store/deploy-instance-mixin'
 
 export default {
   name: 'Home',
-  mixins: [deployInstanceMixin],
+  mixins: [taskMixin, deployInstanceMixin],
   components: {
     ServerList,
     DeployAction,
@@ -33,10 +36,25 @@ export default {
   },
   data () {
     return {
-      activeKey: '1'
+      activeKey: '1',
+      deployActionVisible: false
     }
   },
   methods: {
+    // 展示新增表单
+    showAddForm () {
+      this.deployActionVisible = true
+    },
+    // 关闭表单
+    closeAddForm () {
+      this.deployActionVisible = false
+    },
+    // 提交表单
+    onSubmit (val) {
+      this.deployActionVisible = false
+      this._addPendingTaskList(val)
+      this.activeKey = '2'
+    },
     onChangeTab (activeKey) {
       switch (activeKey) {
         case '3':

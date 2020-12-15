@@ -11,6 +11,9 @@ const taskMixin = {
         info: {
           color: 'white'
         },
+        primary: {
+          color: '#409EFF'
+        },
         warning: {
           color: '#E6A23C'
         },
@@ -65,6 +68,13 @@ const taskMixin = {
         taskId
       })
     },
+    // change task by task id
+    _changeTaskByTaskId (taskId, val) {
+      this.$store.commit('UPDATE_TASK', {
+        taskId,
+        task: JSON.parse(JSON.stringify(val))
+      })
+    },
     // add task log by task id
     _addTaskLogByTaskId (taskId, val, type = 'info') {
       this.$store.commit('ADD_TASK_LOG', {
@@ -109,7 +119,7 @@ const taskMixin = {
             resolve(res.stdout)
           } else {
             this._addTaskLogByTaskId(taskId, command + ' 命令执行发生错误!', 'error')
-            this._addTaskLogByTaskId(taskId, '请检查远端环境中该命令是否有效！', 'error')
+            this._addTaskLogByTaskId(taskId, '请检查远端环境中该命令是否有效！', 'warning')
             resolve(res.stderr)
           }
         }).catch(err => {

@@ -33,6 +33,12 @@ const mutations = {
       state.executingTaskQueue = Object.assign({}, state.executingTaskQueue, {})
     }
   },
+  UPDATE_TASK (state, { taskId, task }) {
+    if (state.executingTaskQueue[taskId]) {
+      state.executingTaskQueue = Object.assign({}, state.executingTaskQueue,
+        { [taskId]: { ...task, status: 'running' } })
+    }
+  },
   CHANGE_TASK_STATUS (state, { taskId, status }) {
     if (state.executingTaskQueue[taskId]) {
       state.executingTaskQueue[taskId].status = status
