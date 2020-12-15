@@ -47,7 +47,7 @@ export default {
         //   title: 'server'
         // },
         {
-          dataIndex: 'serverPath',
+          dataIndex: 'releasePath',
           title: '部署路径'
         },
         {

@@ -18,7 +18,14 @@
         </a-select>
       </a-form-item>
       <a-form-item label="deploy path">
-        <a-input v-model="form.serverPath" placeholder="the deploy path in server" />
+        <a-input v-model="form.releasePath" placeholder="the deploy path in server" />
+      </a-form-item>
+      <a-form-item label="remote backup">
+        <a-radio-group v-model="form.backup" button-style="solid">
+          <a-radio-button v-for="(item, index) in backupOptions" :key="index" :value="item.value">
+            {{ item.label }}
+          </a-radio-button>
+        </a-radio-group>
       </a-form-item>
       <a-form-item label="project path">
         <a-button @click="handleSelectDir">
@@ -56,7 +63,11 @@ export default {
   },
   data () {
     return {
-      form: {}
+      form: {},
+      backupOptions: [
+        { value: true, label: '开启' },
+        { value: false, label: '关闭' }
+      ]
     }
   },
   watch: {

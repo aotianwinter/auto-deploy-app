@@ -16,7 +16,6 @@ const actions = {
       if (err) {
         console.log(err)
       } else {
-        console.log(docs)
         commit('GET_DEPLOY_INSTANCE_LIST', docs)
       }
     })

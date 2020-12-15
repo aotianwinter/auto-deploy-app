@@ -1,5 +1,4 @@
 import { mapState } from 'vuex'
-import { remote } from 'electron'
 const _ = require('lodash')
 const fs = require('fs')
 const join = require('path').join
@@ -137,14 +136,14 @@ const taskMixin = {
         // prepare before compress
         const filterDir = this._filterExcludeFiles(targetDir, excludeFiles)
         this._addTaskLogByTaskId(taskId, '⏳正在压缩文件...')
-        let output = fs.createWriteStream(join(remote.app.getPath('userData'), '/' + localFile)) // create file stream write
+        let output = fs.createWriteStream(localFile) // create file stream write
         const archive = archiver('zip', {
           zlib: { level: 9 } // set compress level
         })
         output.on('close', () => {
           this._addTaskLogByTaskId(taskId,
             '压缩完成！共计' + (archive.pointer() / 1024 / 1024).toFixed(3) + 'MB', 'success')
-          resolve('Compression complete')
+          resolve()
         }).on('error', (err) => {
           this._addTaskLogByTaskId(taskId, '压缩失败', 'error')
           this._addTaskLogByTaskId(taskId, err, 'error')
@@ -171,6 +170,20 @@ const taskMixin = {
     _filterExcludeFiles (targetDir, excludeFiles = []) {
       return fs.readdirSync(targetDir).filter(file => {
         return (!excludeFiles.includes(file))
+      })
+    },
+    // 文件上传(ssh对象、配置信息、本地待上传文件)
+    _uploadFile (ssh, localFile, serverFile, taskId) {
+      return new Promise((resolve, reject) => {
+        this._addTaskLogByTaskId(taskId, '⏳正在上传文件...')
+        ssh.putFile(localFile, serverFile).then(() => {
+          this._addTaskLogByTaskId(taskId, '文件上传完成', 'success')
+          resolve()
+        }, (err) => {
+          this._addTaskLogByTaskId(taskId, '文件上传失败', 'error')
+          this._addTaskLogByTaskId(taskId, err, 'error')
+          reject(err)
+        })
       })
     }
   }

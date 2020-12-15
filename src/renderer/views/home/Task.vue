@@ -44,13 +44,16 @@
   </div>
 </template>
 <script>
+// import { remote } from 'electron'
 import { v4 as uuidv4 } from 'uuid'
+import dayjs from 'dayjs'
 
 import taskMixin from '@/store/task-mixin'
 import deployInstanceMixin from '@/store/deploy-instance-mixin'
 import DeployAction from './DeployAction'
 
 const { NodeSSH } = require('node-ssh')
+// const { join } = require('path')
 export default {
   name: 'Task',
   mixins: [taskMixin, deployInstanceMixin],
@@ -80,13 +83,40 @@ export default {
   methods: {
     // 处理任务
     async handleTask (taskId, task) {
+      console.log(task)
       try {
         this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
         const ssh = new NodeSSH()
-        // compress dir
-        if (task.projectPath) await this._compress(task.projectPath, 'dist.zip', [], 'dist/', taskId)
         // ssh connect
         await this._connectServe(ssh, task.server, taskId)
+        const { projectPath, releasePath, backup } = task
+        const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
+        const releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
+        // compress dir and upload file
+        if (projectPath) {
+          // const localFile = join(remote.app.getPath('userData'), '/' + 'dist.zip')
+          // await this._compress(projectPath, localFile, [], 'dist/', taskId)
+          // backup check
+          if (backup) {
+            this._addTaskLogByTaskId(taskId, '已开启远端备份', 'success')
+            await this._runCommand(ssh,
+            // TODO 未完成分行
+              `
+              if [ -d ${releaseDir} ];
+              then mv ${releaseDir} ${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
+              fi
+              `, deployDir, taskId)
+          } else {
+            this._addTaskLogByTaskId(taskId, '提醒：未开启远端备份', 'warning')
+            await this._runCommand(ssh,
+              `
+              if [ -d ${releaseDir} ];
+              then mv ${releaseDir} /tmp/${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
+              fi
+              `, deployDir, taskId)
+          }
+        }
+        // run post commond
         if (task.postCommond) await this._runCommand(ssh, task.postCommond, '/', taskId)
         this._addTaskLogByTaskId(taskId, '🎉恭喜，所有任务已执行完成！', 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
