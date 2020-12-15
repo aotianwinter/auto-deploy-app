@@ -39,7 +39,7 @@
     </a-collapse>
     <a-empty v-else />
     <!-- modal -->
-    <DeployAction :data="curTask" :visible="deployActionVisible"
+    <DeployAction title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>

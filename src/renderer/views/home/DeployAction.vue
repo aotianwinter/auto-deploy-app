@@ -1,7 +1,7 @@
 <template>
   <!-- modal -->
   <a-modal
-    title="Create Task For Deploy"
+    :title="title"
     :visible="visible"
     @ok="submitForm(form)"
     @cancel="onCancel"
@@ -41,6 +41,10 @@ export default {
   mixins: [serverMixin],
   name: 'DeployAction',
   props: {
+    title: {
+      type: String,
+      default: 'Deploy Task'
+    },
     data: {
       type: Object,
       default: () => {}

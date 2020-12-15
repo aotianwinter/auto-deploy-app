@@ -2,16 +2,16 @@
   <div>
     <a-tabs v-model="activeKey" @change="onChangeTab">
       <a-tab-pane key="1" tab="Server Center">
-        <ServerList></ServerList>
+        <ServerList />
         <a-button @click="showAddForm" type="dashed">deploy</a-button>
-        <DeployAction :data="{}" :visible="deployActionVisible"
+        <DeployAction title="Create Deploy Task" :data="{}" :visible="deployActionVisible"
           @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">
-        <Task></Task>
+        <Task />
       </a-tab-pane>
       <a-tab-pane key="3" tab="Deploy Instance">
-        <DeployInstanceList @switchTaskTab="activeKey = '2'"></DeployInstanceList>
+        <DeployInstanceList @switchTaskTab="activeKey = '2'" />
       </a-tab-pane>
     </a-tabs>
   </div>

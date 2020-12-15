@@ -27,7 +27,7 @@
     </a-card>
     <!-- modal -->
     <a-modal
-      title="Title"
+      :title="modalTitle"
       :visible="visible"
       :confirm-loading="confirmLoading"
       @ok="submitForm(form, submitType)"
@@ -41,7 +41,7 @@
           <a-input v-model="form.host" />
         </a-form-item>
         <a-form-item label="port">
-          <a-input v-model="form.port" />
+          <a-input-number id="inputNumber" v-model="form.port" :min="1" :max="65535" />
         </a-form-item>
         <a-form-item label="username">
           <a-input v-model="form.username" />
@@ -64,6 +64,7 @@ export default {
       visible: false,
       confirmLoading: false,
       submitType: 'add',
+      modalTitle: 'Add Server',
       form: {}
     }
   },
@@ -74,12 +75,14 @@ export default {
     // 展示新增表单
     showAddForm () {
       this.submitType = 'add'
+      this.modalTitle = 'Add Server'
       this.form = {}
       this.visible = true
     },
     // 展示编辑表单
     showEditForm (val) {
       this.submitType = 'edit'
+      this.modalTitle = 'Edit Server'
       this.form = JSON.parse(JSON.stringify(val))
       this.visible = true
     },
