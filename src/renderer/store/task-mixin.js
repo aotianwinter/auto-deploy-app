@@ -116,19 +116,21 @@ const taskMixin = {
     // run linux shell (ssh对象、shell指令、执行路径、taskId)
     _runCommand (ssh, command, path = '/', taskId) {
       return new Promise((resolve, reject) => {
-        this._addTaskLogByTaskId(taskId, command + '执行中...')
+        this._addTaskLogByTaskId(taskId, `${command} 执行中...`)
         ssh.execCommand(command, {
           cwd: path
         }).then((res) => {
+          const { stdout, stderr } = res
           console.log(11, res)
-          if (res.stderr) {
-            this._addTaskLogByTaskId(taskId, command + '命令执行发生错误!', 'error')
+          if (stderr && !stdout) {
+            this._addTaskLogByTaskId(taskId, `${command} 执行发生错误！`, 'error')
             this._addTaskLogByTaskId(taskId, '请检查远端环境中该命令是否有效！', 'warning')
-            resolve(res.stderr)
+            reject(stderr)
           } else {
-            this._addTaskLogByTaskId(taskId, res.stdout)
-            this._addTaskLogByTaskId(taskId, command + '执行完成！', 'success')
-            resolve(res.stdout)
+            if (stdout) this._addTaskLogByTaskId(taskId, stdout)
+            if (stderr) this._addTaskLogByTaskId(taskId, `Warning: ${stderr}`, 'warning')
+            this._addTaskLogByTaskId(taskId, `${command} 执行完成！`, 'success')
+            resolve()
           }
         }).catch(err => {
           reject(err)
