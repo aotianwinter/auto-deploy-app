@@ -4,7 +4,7 @@
     <a-card title="Server List" style="width: 500px"
       :bodyStyle="{ height: '500px', 'overflow-y': 'auto'}">
       <template #extra>
-        <a-icon type="file-add" @click="showAddForm" />
+        <a-icon title="add" type="file-add" @click="showAddForm" />
       </template>
       <a-collapse>
         <a-collapse-panel v-for="item in serverList" :key="item._id">
@@ -13,12 +13,12 @@
             {{ item.name }}
           </template>
           <template #extra>
-            <a-icon @click.stop="showEditForm(item)" type="edit" />
+            <a-icon title="edit" @click.stop="showEditForm(item)" type="edit" />
             <a-popconfirm
               title="Sure to delete?"
               @confirm="() => onDelete(item._id)"
             >
-              <a-icon @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+              <a-icon title="delete" @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
             </a-popconfirm>
           </template>
           <p>{{ item }}</p>

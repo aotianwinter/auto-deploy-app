@@ -9,34 +9,44 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <a-popconfirm
-          v-if="deployInstanceList.length"
+          placement="left"
           title="Sure to run task?"
           @confirm="() => onRunTask(record)"
         >
-          <a-icon type="thunderbolt" theme="twoTone" />
+          <a-icon title="run" type="thunderbolt" theme="twoTone" />
         </a-popconfirm>
+        <a-icon title="edit" @click.stop="showEditForm(record)" type="edit" />
         <a-popconfirm
-          v-if="deployInstanceList.length"
+          placement="left"
           title="Sure to delete?"
           @confirm="() => onDelete(record._id)"
         >
-          <a-icon type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+          <a-icon title="delete" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
         </a-popconfirm>
       </span>
     </a-table>
+    <!-- modal -->
+    <DeployAction title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
+      @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
 
+import DeployAction from './DeployAction'
 import taskMixin from '@/store/task-mixin'
 import deployInstanceMixin from '@/store/deploy-instance-mixin'
 export default {
   name: 'DeployInstanceList',
   mixins: [taskMixin, deployInstanceMixin],
+  components: {
+    DeployAction
+  },
   data () {
     return {
+      curTask: {},
+      deployActionVisible: false,
       columns: [
         {
           dataIndex: 'name',
@@ -83,11 +93,26 @@ export default {
     },
     // on run task
     onRunTask (val) {
-      console.log('perpar to deploy')
       this.$emit('switchTaskTab')
       const task = JSON.parse(JSON.stringify(val))
       task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
       this._addPendingTaskList(JSON.parse(JSON.stringify(task)))
+    },
+    // 展示编辑表单
+    showEditForm (val) {
+      this.curTask = JSON.parse(JSON.stringify(val))
+      this.deployActionVisible = true
+    },
+    // 关闭表单
+    closeAddForm () {
+      this.deployActionVisible = false
+    },
+    // 提交表单
+    onSubmit (val) {
+      const deployInstance = JSON.parse(JSON.stringify(val))
+      this.deployActionVisible = false
+      this._editDeployInstanceList(deployInstance)
+      this._getDeployInstanceList()
     }
   }
 }

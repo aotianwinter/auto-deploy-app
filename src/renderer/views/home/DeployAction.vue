@@ -81,7 +81,6 @@ export default {
   methods: {
     // 提交表单
     submitForm (val) {
-      console.log('perpar to deploy')
       const task = JSON.parse(JSON.stringify(val))
       for (let item of this.serverList) {
         if (item._id === task.serverId) {

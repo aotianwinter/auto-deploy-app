@@ -120,6 +120,7 @@ const taskMixin = {
         ssh.execCommand(command, {
           cwd: path
         }).then((res) => {
+          console.log(11, res)
           if (res.stderr) {
             this._addTaskLogByTaskId(taskId, command + '命令执行发生错误!', 'error')
             this._addTaskLogByTaskId(taskId, '请检查远端环境中该命令是否有效！', 'warning')

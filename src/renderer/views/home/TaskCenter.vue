@@ -18,22 +18,22 @@
             title="Sure to save?"
             @confirm="() => saveDeployInstance(item)"
           >
-            <a-icon @click.stop="" type="save" />
+            <a-icon title="save" @click.stop="" type="save" theme="twoTone" two-tone-color="#67C23A" />
           </a-popconfirm>
           <a-popconfirm
             placement="left"
             title="Sure to clear logs and retry?"
             @confirm="() => onRetry(item)"
           >
-            <a-icon @click.stop="" type="reload" theme="twoTone" />
+            <a-icon title="retry" @click.stop="" type="reload" style="color: #409EFF" />
           </a-popconfirm>
-          <a-icon @click.stop="showEditForm(item)" type="edit" />
+          <a-icon title="edit" @click.stop="showEditForm(item)" type="edit" />
           <a-popconfirm
             placement="left"
             title="Sure to delete?"
             @confirm="() => onDelete(item.taskId)"
           >
-            <a-icon @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+            <a-icon title="delete" @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
           </a-popconfirm>
         </template>
         <!-- task log -->
@@ -90,7 +90,6 @@ export default {
   methods: {
     // 处理任务
     async handleTask (taskId, task) {
-      console.log(task)
       try {
         const { server, projectPath, releasePath, backup, postCommond } = task
         const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
@@ -129,7 +128,7 @@ export default {
         await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
         // console.log(this.app)
         // run post commond
-        if (postCommond) await this._runCommand(ssh, postCommond, '/', taskId)
+        if (postCommond) await this._runCommand(ssh, postCommond, deployDir, taskId)
         this._addTaskLogByTaskId(taskId, `🎉恭喜，所有任务已执行完成！${server.name}部署成功`, 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
         // if task in deploy instance list finshed then update status
@@ -156,7 +155,7 @@ export default {
     saveDeployInstance (task) {
       const deployInstance = JSON.parse(JSON.stringify(task))
       if (deployInstance.logs) delete deployInstance.logs
-      this._editDeployInstanceList(deployInstance)
+      task._id ? this._editDeployInstanceList(deployInstance) : this._addDeployInstanceList(deployInstance)
     },
     // 重新执行
     onRetry (task) {
