@@ -6,37 +6,37 @@
     @ok="submitForm(form)"
     @cancel="onCancel"
   >
-    <a-form :model="form">
-      <a-form-item label="name">
+    <a-form-model :model="form" :rules="rules" ref="ruleForm">
+      <a-form-model-item label="name" prop="name">
         <a-input v-model="form.name" placeholder="please input your task name" />
-      </a-form-item>
-      <a-form-item label="server">
+      </a-form-model-item>
+      <a-form-model-item label="server" prop="serverId">
         <a-select v-model="form.serverId" placeholder="please select your server">
           <a-select-option v-for="item in serverList" :key="item._id" :value="item._id">
             {{ item.name }}
           </a-select-option>
         </a-select>
-      </a-form-item>
-      <a-form-item label="deploy path">
-        <a-input v-model="form.releasePath" placeholder="the deploy path in server" />
-      </a-form-item>
-      <a-form-item label="remote backup">
+      </a-form-model-item>
+      <a-form-model-item label="release path" prop="releasePath">
+        <a-input v-model="form.releasePath" placeholder="please input release path in server such as /home/test/web" />
+      </a-form-model-item>
+      <a-form-model-item label="remote backup" prop="backup">
         <a-radio-group v-model="form.backup" button-style="solid">
           <a-radio-button v-for="(item, index) in backupOptions" :key="index" :value="item.value">
             {{ item.label }}
           </a-radio-button>
         </a-radio-group>
-      </a-form-item>
-      <a-form-item label="project path">
+      </a-form-model-item>
+      <a-form-model-item label="project path" prop="projectPath">
         <a-button @click="handleSelectDir">
           <a-icon type="upload" />Click Project Dir
         </a-button>
         <p>{{ form.projectPath }}</p>
-      </a-form-item>
-      <a-form-item label="post commond">
+      </a-form-model-item>
+      <a-form-model-item label="post commond" prop="postCommond">
         <a-input v-model="form.postCommond" placeholder="please input your post commond" />
-      </a-form-item>
-    </a-form>
+      </a-form-model-item>
+    </a-form-model>
   </a-modal>
 </template>
 <script>
@@ -64,6 +64,13 @@ export default {
   data () {
     return {
       form: {},
+      rules: {
+        name: [ { required: true, message: 'Please input task name', trigger: 'blur' } ],
+        serverId: [ { required: true, message: 'Please slelect your server', trigger: 'blur' } ],
+        releasePath: [ { required: true, message: 'Please input release path in server', trigger: 'blur' } ],
+        backup: [ { required: true, message: 'Please select remote backup', trigger: 'blur' } ],
+        projectPath: [ { required: true, message: 'Please select project path in local', trigger: 'blur' } ]
+      },
       backupOptions: [
         { value: true, label: '开启' },
         { value: false, label: '关闭' }
@@ -81,19 +88,27 @@ export default {
   methods: {
     // 提交表单
     submitForm (val) {
-      const task = JSON.parse(JSON.stringify(val))
-      for (let item of this.serverList) {
-        if (item._id === task.serverId) {
-          task.server = item
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          const task = JSON.parse(JSON.stringify(val))
+          for (let item of this.serverList) {
+            if (item._id === task.serverId) {
+              task.server = item
+            }
+          }
+          task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+          this.$emit('submit', task)
+          this.form = {}
+          if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
+        } else {
+          return false
         }
-      }
-      task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
-      this.$emit('submit', task)
-      this.form = {}
+      })
     },
     // 点击取消
     onCancel () {
       this.form = {}
+      if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
       this.$emit('cancel')
     },
     // 选择文件
