@@ -29,27 +29,26 @@
     <a-modal
       :title="modalTitle"
       :visible="visible"
-      :confirm-loading="confirmLoading"
       @ok="submitForm(form, submitType)"
-      @cancel="visible = false"
+      @cancel="onCancel"
     >
-      <a-form :model="form">
-        <a-form-item label="name">
-          <a-input v-model="form.name" />
-        </a-form-item>
-        <a-form-item label="host">
-          <a-input v-model="form.host" />
-        </a-form-item>
-        <a-form-item label="port">
-          <a-input-number id="inputNumber" v-model="form.port" :min="1" :max="65535" />
-        </a-form-item>
-        <a-form-item label="username">
-          <a-input v-model="form.username" />
-        </a-form-item>
-        <a-form-item label="password">
-          <a-input v-model="form.password" />
-        </a-form-item>
-      </a-form>
+      <a-form-model :model="form" :rules="rules" ref="ruleForm">
+        <a-form-model-item label="name" prop="name">
+          <a-input v-model="form.name" placeholder="please input server name" />
+        </a-form-model-item>
+        <a-form-model-item label="host" prop="host">
+          <a-input v-model="form.host" placeholder="please input host of server" />
+        </a-form-model-item>
+        <a-form-model-item label="port" prop="port">
+          <a-input-number v-model="form.port" :min="1" :max="65535" placeholder="22" />
+        </a-form-model-item>
+        <a-form-model-item label="username" prop="username">
+          <a-input v-model="form.username" placeholder="please input username of server" />
+        </a-form-model-item>
+        <a-form-model-item label="password" prop="password">
+          <a-input-password v-model="form.password" placeholder="please input password of server" />
+        </a-form-model-item>
+      </a-form-model>
     </a-modal>
   </div>
 </template>
@@ -62,10 +61,16 @@ export default {
   data () {
     return {
       visible: false,
-      confirmLoading: false,
       submitType: 'add',
       modalTitle: 'Add Server',
-      form: {}
+      form: {},
+      rules: {
+        name: [ { required: true, message: 'Please input server name', trigger: 'blur' } ],
+        host: [ { required: true, message: 'Please input host of server', trigger: 'blur' } ],
+        port: [ { required: true, message: 'Please input port of server', trigger: 'blur' } ],
+        username: [ { required: true, message: 'Please input username of server', trigger: 'blur' } ],
+        password: [ { required: true, message: 'Please input password of server', trigger: 'blur' } ]
+      }
     }
   },
   created () {
@@ -87,13 +92,23 @@ export default {
       this.visible = true
     },
     // 提交表单
-    async submitForm (val, type = 'add') {
-      this.confirmLoading = true
-      // TODO
-      type === 'add' ? await this._addServerList(val) : await this._editServerList(val)
-      this._getServerList()
+    submitForm (val, type = 'add') {
+      this.$refs.ruleForm.validate(async (valid) => {
+        if (valid) {
+          type === 'add' ? await this._addServerList(val) : await this._editServerList(val)
+          this._getServerList()
+          this.visible = false
+          this.confirmLoading = false
+          if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
+        } else {
+          return false
+        }
+      })
+    },
+    // 点击取消
+    onCancel () {
       this.visible = false
-      this.confirmLoading = false
+      if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
     },
     // 删除信息
     async onDelete (_id) {

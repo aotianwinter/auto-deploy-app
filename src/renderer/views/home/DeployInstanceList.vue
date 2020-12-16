@@ -52,13 +52,17 @@ export default {
           dataIndex: 'name',
           title: '名称'
         },
-        // {
-        //   dataIndex: 'server',
-        //   title: 'server'
-        // },
+        {
+          dataIndex: 'server.name',
+          title: '服务器'
+        },
+        {
+          dataIndex: 'server.host',
+          title: 'IP'
+        },
         {
           dataIndex: 'releasePath',
-          title: '部署路径'
+          title: '发布路径'
         },
         {
           dataIndex: 'projectPath',
