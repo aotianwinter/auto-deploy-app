@@ -7,23 +7,6 @@ const archiver = require('archiver')
 const taskMixin = {
   data () {
     return {
-      logLevelOptions: {
-        success: {
-          color: '#67C23A'
-        },
-        info: {
-          color: 'white'
-        },
-        primary: {
-          color: '#409EFF'
-        },
-        warning: {
-          color: '#E6A23C'
-        },
-        error: {
-          color: '#F56C6C'
-        }
-      },
       taskStatusOptions: {
         passed: {
           color: 'green',
@@ -121,7 +104,6 @@ const taskMixin = {
           cwd: path
         }).then((res) => {
           const { stdout, stderr } = res
-          console.log(11, res)
           if (stderr && !stdout) {
             this._addTaskLogByTaskId(taskId, `${command} 执行发生错误！`, 'error')
             this._addTaskLogByTaskId(taskId, '请检查远端环境中该命令是否有效！', 'warning')

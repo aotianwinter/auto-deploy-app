@@ -37,11 +37,7 @@
           </a-popconfirm>
         </template>
         <!-- task log -->
-        <div class="task-log-wrap">
-          <p v-for="(logItem, logIndex) in item.logs" :key="logIndex" :style="{ color: logLevelOptions[logItem.type].color }">
-            {{ logItem.msg }}
-          </p>
-        </div>
+        <LogView :logs="item.logs" />
       </a-collapse-panel>
     </a-collapse>
     <a-empty description="No Task" v-else />
@@ -58,6 +54,7 @@ import dayjs from 'dayjs'
 import taskMixin from '@/store/task-mixin'
 import deployInstanceMixin from '@/store/deploy-instance-mixin'
 import DeployAction from './DeployAction'
+import LogView from '@/components/LogView'
 
 const { NodeSSH } = require('node-ssh')
 const { join } = require('path')
@@ -65,7 +62,8 @@ export default {
   name: 'TaskCenter',
   mixins: [taskMixin, deployInstanceMixin],
   components: {
-    DeployAction
+    DeployAction,
+    LogView
   },
   data () {
     return {
@@ -190,14 +188,6 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.page-wrap
-  .task-log-wrap
-    color white
-    background black
-    height 500px
-    overflow-y auto
-    padding 1rem
-
 .anticon
   margin-left 6px
 </style>
