@@ -8,7 +8,7 @@
           @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">
-        <Task />
+        <TaskCenter />
       </a-tab-pane>
       <a-tab-pane key="3" tab="Deploy Instance">
         <DeployInstanceList @switchTaskTab="activeKey = '2'" />
@@ -20,7 +20,7 @@
 <script>
 import ServerList from './ServerList'
 import DeployAction from './DeployAction'
-import Task from './Task'
+import TaskCenter from './TaskCenter'
 import DeployInstanceList from './DeployInstanceList'
 import taskMixin from '@/store/task-mixin'
 import deployInstanceMixin from '@/store/deploy-instance-mixin'
@@ -31,7 +31,7 @@ export default {
   components: {
     ServerList,
     DeployAction,
-    Task,
+    TaskCenter,
     DeployInstanceList
   },
   data () {

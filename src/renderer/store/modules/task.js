@@ -39,7 +39,7 @@ const mutations = {
         { [taskId]: { ...task, status: 'running' } })
     }
   },
-  CHANGE_TASK_STATUS (state, { taskId, status }) {
+  UPDATE_TASK_STATUS (state, { taskId, status }) {
     if (state.executingTaskQueue[taskId]) {
       state.executingTaskQueue[taskId].status = status
     }
@@ -50,6 +50,13 @@ const mutations = {
         state.executingTaskQueue[taskId].logs.push(log)
       } else {
         state.executingTaskQueue[taskId] = Object.assign({}, state.executingTaskQueue[taskId], { logs: [log] })
+      }
+    }
+  },
+  CLEAN_TASK_LOG (state, { taskId }) {
+    if (state.executingTaskQueue[taskId]) {
+      if (state.executingTaskQueue[taskId].logs && state.executingTaskQueue[taskId].logs.constructor === Array) {
+        state.executingTaskQueue[taskId] = Object.assign({}, state.executingTaskQueue[taskId], { logs: [] })
       }
     }
   }

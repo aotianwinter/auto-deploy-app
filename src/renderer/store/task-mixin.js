@@ -88,9 +88,13 @@ const taskMixin = {
         }
       })
     },
+    // clean task log by task id
+    _cleanTaskLogByTaskId (taskId) {
+      this.$store.commit('CLEAN_TASK_LOG', { taskId })
+    },
     // change task status by task id
     _changeTaskStatusByTaskId (taskId, status = 'running') {
-      this.$store.commit('CHANGE_TASK_STATUS', {
+      this.$store.commit('UPDATE_TASK_STATUS', {
         taskId,
         status
       })
@@ -112,18 +116,18 @@ const taskMixin = {
     // run linux shell (ssh对象、shell指令、执行路径、taskId)
     _runCommand (ssh, command, path = '/', taskId) {
       return new Promise((resolve, reject) => {
-        this._addTaskLogByTaskId(taskId, command + ' 执行中...')
+        this._addTaskLogByTaskId(taskId, command + '执行中...')
         ssh.execCommand(command, {
           cwd: path
         }).then((res) => {
-          if (res.stdout) {
-            this._addTaskLogByTaskId(taskId, command + ' 执行完成！', 'success')
-            this._addTaskLogByTaskId(taskId, res.stdout)
-            resolve(res.stdout)
-          } else {
-            this._addTaskLogByTaskId(taskId, command + ' 命令执行发生错误!', 'error')
+          if (res.stderr) {
+            this._addTaskLogByTaskId(taskId, command + '命令执行发生错误!', 'error')
             this._addTaskLogByTaskId(taskId, '请检查远端环境中该命令是否有效！', 'warning')
             resolve(res.stderr)
+          } else {
+            this._addTaskLogByTaskId(taskId, res.stdout)
+            this._addTaskLogByTaskId(taskId, command + '执行完成！', 'success')
+            resolve(res.stdout)
           }
         }).catch(err => {
           reject(err)

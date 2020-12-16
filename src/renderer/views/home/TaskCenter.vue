@@ -20,6 +20,13 @@
           >
             <a-icon @click.stop="" type="save" />
           </a-popconfirm>
+          <a-popconfirm
+            placement="left"
+            title="Sure to clear logs and retry?"
+            @confirm="() => onRetry(item)"
+          >
+            <a-icon @click.stop="" type="reload" theme="twoTone" />
+          </a-popconfirm>
           <a-icon @click.stop="showEditForm(item)" type="edit" />
           <a-popconfirm
             placement="left"
@@ -37,14 +44,14 @@
         </div>
       </a-collapse-panel>
     </a-collapse>
-    <a-empty v-else />
+    <a-empty description="No Task" v-else />
     <!-- modal -->
     <DeployAction title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
 <script>
-// import { remote } from 'electron'
+import { remote } from 'electron'
 import { v4 as uuidv4 } from 'uuid'
 import dayjs from 'dayjs'
 
@@ -53,9 +60,9 @@ import deployInstanceMixin from '@/store/deploy-instance-mixin'
 import DeployAction from './DeployAction'
 
 const { NodeSSH } = require('node-ssh')
-// const { join } = require('path')
+const { join } = require('path')
 export default {
-  name: 'Task',
+  name: 'TaskCenter',
   mixins: [taskMixin, deployInstanceMixin],
   components: {
     DeployAction
@@ -85,40 +92,45 @@ export default {
     async handleTask (taskId, task) {
       console.log(task)
       try {
+        const { server, projectPath, releasePath, backup, postCommond } = task
+        const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
+        const releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
         this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
         const ssh = new NodeSSH()
         // ssh connect
-        await this._connectServe(ssh, task.server, taskId)
-        const { projectPath, releasePath, backup } = task
-        const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
-        const releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
+        await this._connectServe(ssh, server, taskId)
         // compress dir and upload file
+        const localFile = join(remote.app.getPath('userData'), '/' + 'dist.zip')
         if (projectPath) {
-          // const localFile = join(remote.app.getPath('userData'), '/' + 'dist.zip')
-          // await this._compress(projectPath, localFile, [], 'dist/', taskId)
-          // backup check
-          if (backup) {
-            this._addTaskLogByTaskId(taskId, '已开启远端备份', 'success')
-            await this._runCommand(ssh,
-            // TODO 未完成分行
-              `
-              if [ -d ${releaseDir} ];
-              then mv ${releaseDir} ${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
-              fi
-              `, deployDir, taskId)
-          } else {
-            this._addTaskLogByTaskId(taskId, '提醒：未开启远端备份', 'warning')
-            await this._runCommand(ssh,
-              `
-              if [ -d ${releaseDir} ];
-              then mv ${releaseDir} /tmp/${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
-              fi
-              `, deployDir, taskId)
-          }
+          await this._compress(projectPath, localFile, [], 'dist/', taskId)
         }
+        // backup check
+        if (backup) {
+          this._addTaskLogByTaskId(taskId, '已开启远端备份', 'success')
+          await this._runCommand(ssh,
+            `
+            if [ -d ${releaseDir} ];
+            then mv ${releaseDir} ${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
+            fi
+            `, deployDir, taskId)
+        } else {
+          this._addTaskLogByTaskId(taskId, '提醒：未开启远端备份', 'warning')
+          await this._runCommand(ssh,
+            `
+            if [ -d ${releaseDir} ];
+            then mv ${releaseDir} /tmp/${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
+            fi
+            `, deployDir, taskId)
+        }
+        // upload unzip and clear
+        await this._uploadFile(ssh, localFile, deployDir + '/dist.zip', taskId)
+        await this._runCommand(ssh, 'unzip dist.zip', deployDir, taskId)
+        await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
+        await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
+        // console.log(this.app)
         // run post commond
-        if (task.postCommond) await this._runCommand(ssh, task.postCommond, '/', taskId)
-        this._addTaskLogByTaskId(taskId, '🎉恭喜，所有任务已执行完成！', 'success')
+        if (postCommond) await this._runCommand(ssh, postCommond, '/', taskId)
+        this._addTaskLogByTaskId(taskId, `🎉恭喜，所有任务已执行完成！${server.name}部署成功`, 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
         // if task in deploy instance list finshed then update status
         if (task._id) {
@@ -140,10 +152,19 @@ export default {
         }
       }
     },
+    // 保存
     saveDeployInstance (task) {
       const deployInstance = JSON.parse(JSON.stringify(task))
       if (deployInstance.logs) delete deployInstance.logs
-      this._addDeployInstanceList(deployInstance)
+      this._editDeployInstanceList(deployInstance)
+    },
+    // 重新执行
+    onRetry (task) {
+      const { taskId } = task
+      if (taskId) {
+        this._cleanTaskLogByTaskId(taskId)
+        this.handleTask(taskId, task)
+      }
     },
     onDelete (taskId) {
       if (taskId) this._removeExecutingTaskQueue(taskId)
