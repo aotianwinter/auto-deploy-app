@@ -4,7 +4,8 @@
       <a-tab-pane key="1" tab="Server Center">
         <ServerList />
         <a-button @click="showAddForm" type="dashed">deploy</a-button>
-        <DeployAction title="Create Deploy Task" :data="{ backup: true }" :visible="deployActionVisible"
+        <DeployAction title="Create Deploy Task" :visible="deployActionVisible"
+          :data="{ preCommondList: [''], postCommondList: [''], isUpload: false, backup: true }"
           @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">

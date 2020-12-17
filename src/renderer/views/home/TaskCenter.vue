@@ -89,44 +89,57 @@ export default {
     // 处理任务
     async handleTask (taskId, task) {
       try {
-        const { server, projectPath, releasePath, backup, postCommond } = task
-        const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
-        const releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
+        const { server, preCommondList, isUpload } = task
         this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
         const ssh = new NodeSSH()
         // ssh connect
         await this._connectServe(ssh, server, taskId)
-        // compress dir and upload file
-        const localFile = join(remote.app.getPath('userData'), '/' + 'dist.zip')
-        if (projectPath) {
-          await this._compress(projectPath, localFile, [], 'dist/', taskId)
+        // run post commond in preCommondList
+        if (preCommondList && preCommondList instanceof Array) {
+          for (const item of preCommondList) {
+            await this._runCommand(ssh, item, '/', taskId)
+          }
         }
-        // backup check
-        if (backup) {
-          this._addTaskLogByTaskId(taskId, '已开启远端备份', 'success')
-          await this._runCommand(ssh,
-            `
-            if [ -d ${releaseDir} ];
-            then mv ${releaseDir} ${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
-            fi
-            `, deployDir, taskId)
-        } else {
-          this._addTaskLogByTaskId(taskId, '提醒：未开启远端备份', 'warning')
-          await this._runCommand(ssh,
-            `
-            if [ -d ${releaseDir} ];
-            then mv ${releaseDir} /tmp/${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
-            fi
-            `, deployDir, taskId)
+        // is upload
+        if (isUpload) {
+          const { projectPath, releasePath, backup, postCommondList } = task
+          const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
+          const releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
+          // compress dir and upload file
+          const localFile = join(remote.app.getPath('userData'), '/' + 'dist.zip')
+          if (projectPath) {
+            await this._compress(projectPath, localFile, [], 'dist/', taskId)
+          }
+          // backup check
+          if (backup) {
+            this._addTaskLogByTaskId(taskId, '已开启远端备份', 'success')
+            await this._runCommand(ssh,
+              `
+              if [ -d ${releaseDir} ];
+              then mv ${releaseDir} ${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
+              fi
+              `, deployDir, taskId)
+          } else {
+            this._addTaskLogByTaskId(taskId, '提醒：未开启远端备份', 'warning')
+            await this._runCommand(ssh,
+              `
+              if [ -d ${releaseDir} ];
+              then mv ${releaseDir} /tmp/${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
+              fi
+              `, deployDir, taskId)
+          }
+          // upload unzip and clear
+          await this._uploadFile(ssh, localFile, deployDir + '/dist.zip', taskId)
+          await this._runCommand(ssh, 'unzip dist.zip', deployDir, taskId)
+          await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
+          await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
+          // run post commond in postCommondList
+          if (postCommondList && postCommondList instanceof Array) {
+            for (const item of postCommondList) {
+              await this._runCommand(ssh, item, '/', taskId)
+            }
+          }
         }
-        // upload unzip and clear
-        await this._uploadFile(ssh, localFile, deployDir + '/dist.zip', taskId)
-        await this._runCommand(ssh, 'unzip dist.zip', deployDir, taskId)
-        await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
-        await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
-        // console.log(this.app)
-        // run post commond
-        if (postCommond) await this._runCommand(ssh, postCommond, deployDir, taskId)
         this._addTaskLogByTaskId(taskId, `🎉恭喜，所有任务已执行完成！${server.name}部署成功`, 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
         // if task in deploy instance list finshed then update status
