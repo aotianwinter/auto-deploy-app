@@ -7,6 +7,20 @@
           {{ taskStatusOptions[status].desc }}
         </a-tag>
       </span>
+      <span slot="preCommandList" slot-scope="preCommandList">
+        <p v-for="(item, index) in preCommandList" :key="index">
+          <template v-if="item.path && item.command">
+            <a-tag>{{ item.path }}</a-tag> {{ item.command }}
+          </template>
+        </p>
+      </span>
+      <span slot="postCommandList" slot-scope="postCommandList">
+        <p v-for="(item, index) in postCommandList" :key="index">
+          <template v-if="item.path && item.command">
+            <a-tag>{{ item.path }}</a-tag> {{ item.command }}
+          </template>
+        </p>
+      </span>
       <span slot="action" slot-scope="text, record">
         <a-popconfirm
           placement="left"
@@ -61,6 +75,11 @@ export default {
           title: 'IP'
         },
         {
+          dataIndex: 'preCommandList',
+          title: '前置命令',
+          scopedSlots: { customRender: 'preCommandList' }
+        },
+        {
           dataIndex: 'releasePath',
           title: '发布路径'
         },
@@ -68,10 +87,11 @@ export default {
           dataIndex: 'projectPath',
           title: '项目路径'
         },
-        // {
-        //   dataIndex: 'postCammond',
-        //   title: '后置命令'
-        // },
+        {
+          dataIndex: 'postCommandList',
+          title: '后置命令',
+          scopedSlots: { customRender: 'postCommandList' }
+        },
         {
           dataIndex: 'lastExecutedTime',
           title: '上次执行时间'

@@ -31,7 +31,7 @@
       </a-form-model-item>
       <!-- upload -->
       <a-form-model-item label="upload files" prop="isUpload">
-        <a-radio-group v-model="form.isUpload" button-style="solid">
+        <a-radio-group @change="onChangeIsUpload" v-model="form.isUpload" button-style="solid">
           <a-radio-button v-for="(item, index) in openOptions" :key="index" :value="item.value">
             {{ item.label }}
           </a-radio-button>
@@ -58,7 +58,7 @@
         <!-- post command list -->
         <a-form-model-item
           v-for="(item, index) in form.postCommandList" :key="index"
-          :label="index === 0 ? 'post command' : ''"
+          :label="index === 0 ? 'post command ( path | command )' : ''"
         >
           <a-input-group compact style="width: calc(100% - 22px); margin-right: 8px">
             <a-input v-model="form.postCommandList[index].path" style="width: 30%" placeholder="/home" />
@@ -128,7 +128,7 @@ export default {
     addCommand (key) {
       if (this.form[key] && this.form[key] instanceof Array) {
         this.form[key].push({
-          path: '',
+          path: '/',
           command: ''
         })
       }
@@ -137,6 +137,19 @@ export default {
     removeCommand (key, index) {
       if (this.form[key] && this.form[key] instanceof Array) {
         this.form[key].splice(index, 1)
+      }
+    },
+    // change isUpload
+    onChangeIsUpload (evt) {
+      if (!evt.target.value) {
+        this.form = {
+          ...this.form,
+          releasePath: '',
+          projectPath: '',
+          postCommandList: [{ path: '/', command: '' }],
+          isUpload: false,
+          backup: true
+        }
       }
     },
     // 提交表单
