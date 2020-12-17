@@ -5,7 +5,7 @@
         <ServerList />
         <a-button @click="showAddForm" type="dashed">deploy</a-button>
         <DeployAction title="Create Deploy Task" :visible="deployActionVisible"
-          :data="{ preCommondList: [''], postCommondList: [''], isUpload: false, backup: true }"
+          :data="defaultForm"
           @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">
@@ -38,7 +38,13 @@ export default {
   data () {
     return {
       activeKey: '1',
-      deployActionVisible: false
+      deployActionVisible: false,
+      defaultForm: {
+        preCommandList: [{ path: '/', command: '' }],
+        postCommandList: [{ path: '/', command: '' }],
+        isUpload: false,
+        backup: true
+      }
     }
   },
   methods: {

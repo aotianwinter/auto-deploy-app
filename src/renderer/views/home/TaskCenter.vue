@@ -89,20 +89,20 @@ export default {
     // 处理任务
     async handleTask (taskId, task) {
       try {
-        const { server, preCommondList, isUpload } = task
+        const { server, preCommandList, isUpload } = task
         this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
         const ssh = new NodeSSH()
         // ssh connect
         await this._connectServe(ssh, server, taskId)
-        // run post commond in preCommondList
-        if (preCommondList && preCommondList instanceof Array) {
-          for (const item of preCommondList) {
-            await this._runCommand(ssh, item, '/', taskId)
+        // run post command in preCommandList
+        if (preCommandList && preCommandList instanceof Array) {
+          for (const { path, command } of preCommandList) {
+            if (path && command) await this._runCommand(ssh, command, path, taskId)
           }
         }
         // is upload
         if (isUpload) {
-          const { projectPath, releasePath, backup, postCommondList } = task
+          const { projectPath, releasePath, backup, postCommandList } = task
           const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
           const releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
           // compress dir and upload file
@@ -133,10 +133,10 @@ export default {
           await this._runCommand(ssh, 'unzip dist.zip', deployDir, taskId)
           await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
           await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
-          // run post commond in postCommondList
-          if (postCommondList && postCommondList instanceof Array) {
-            for (const item of postCommondList) {
-              await this._runCommand(ssh, item, '/', taskId)
+          // run post command in postCommandList
+          if (postCommandList && postCommandList instanceof Array) {
+            for (const { path, command } of postCommandList) {
+              if (path && command) await this._runCommand(ssh, command, path, taskId)
             }
           }
         }

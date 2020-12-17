@@ -17,15 +17,17 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <!-- pre commond list -->
+      <!-- pre command list -->
       <a-form-model-item
-        v-for="(item, index) in form.preCommondList" :key="index"
-        :label="index === 0 ? 'pre commond' : ''"
+        v-for="(item, index) in form.preCommandList" :key="index"
+        :label="index === 0 ? 'pre command ( path | command )' : ''"
       >
-        <a-input v-model="form.preCommondList[index]" style="width: calc(100% - 22px); margin-right: 8px"
-          allowClear placeholder="please input pre commond" />
-        <a-icon v-if="index === 0" title="add" type="plus-circle-o" @click="addCommond('preCommondList')" />
-        <a-icon v-if="index > 0" title="remove" type="minus-circle-o" @click="removeCommond('preCommondList', index)" />
+        <a-input-group compact style="width: calc(100% - 22px); margin-right: 8px">
+          <a-input v-model="form.preCommandList[index].path" style="width: 30%" placeholder="/home" />
+          <a-input v-model="form.preCommandList[index].command" style="width: 70%" placeholder="echo hello world" />
+        </a-input-group>
+        <a-icon v-if="index === 0" title="add" type="plus-circle-o" @click="addCommand('preCommandList')" />
+        <a-icon v-if="index > 0" title="remove" type="minus-circle-o" @click="removeCommand('preCommandList', index)" />
       </a-form-model-item>
       <!-- upload -->
       <a-form-model-item label="upload files" prop="isUpload">
@@ -36,7 +38,7 @@
         </a-radio-group>
       </a-form-model-item>
       <!-- upload dir show -->
-      <template v-if="form.isUpload">
+      <div v-if="form.isUpload">
         <a-form-model-item label="release path" prop="releasePath">
           <a-input v-model="form.releasePath" allowClear placeholder="please input release path in server such as /home/test/web" />
         </a-form-model-item>
@@ -53,17 +55,19 @@
           </a-button>
           <p>{{ form.projectPath }}</p>
         </a-form-model-item>
-        <!-- post commond list -->
+        <!-- post command list -->
         <a-form-model-item
-          v-for="(item, index) in form.postCommondList" :key="index"
-          :label="index === 0 ? 'post commond' : ''"
+          v-for="(item, index) in form.postCommandList" :key="index"
+          :label="index === 0 ? 'post command' : ''"
         >
-          <a-input v-model="form.postCommondList[index]" style="width: calc(100% - 22px); margin-right: 8px"
-            allowClear placeholder="please input post commond" />
-          <a-icon v-if="index === 0" title="add" type="plus-circle-o" @click="addCommond('postCommondList')" />
-          <a-icon v-if="index > 0" title="remove" type="minus-circle-o" @click="removeCommond('postCommondList', index)" />
+          <a-input-group compact style="width: calc(100% - 22px); margin-right: 8px">
+            <a-input v-model="form.postCommandList[index].path" style="width: 30%" placeholder="/home" />
+            <a-input v-model="form.postCommandList[index].command" style="width: 70%" placeholder="echo hello world" />
+          </a-input-group>
+          <a-icon v-if="index === 0" title="add" type="plus-circle-o" @click="addCommand('postCommandList')" />
+          <a-icon v-if="index > 0" title="remove" type="minus-circle-o" @click="removeCommand('postCommandList', index)" />
         </a-form-model-item>
-      </template>
+      </div>
     </a-form-model>
   </a-modal>
 </template>
@@ -92,8 +96,10 @@ export default {
   data () {
     return {
       form: {
-        preCommondList: [''],
-        postCommondList: ['']
+        preCommandList: [{ path: '/', command: '' }],
+        postCommandList: [{ path: '/', command: '' }],
+        isUpload: false,
+        backup: true
       },
       rules: {
         name: [ { required: true, message: 'Please input task name', trigger: 'blur' } ],
@@ -119,13 +125,16 @@ export default {
   },
   methods: {
     // 添加命令
-    addCommond (key) {
+    addCommand (key) {
       if (this.form[key] && this.form[key] instanceof Array) {
-        this.form[key].push('')
+        this.form[key].push({
+          path: '',
+          command: ''
+        })
       }
     },
     // 删除命令
-    removeCommond (key, index) {
+    removeCommand (key, index) {
       if (this.form[key] && this.form[key] instanceof Array) {
         this.form[key].splice(index, 1)
       }
@@ -134,6 +143,7 @@ export default {
     submitForm (val) {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
+          // console.log(val)
           const task = JSON.parse(JSON.stringify(val))
           for (let item of this.serverList) {
             if (item._id === task.serverId) {
@@ -143,8 +153,10 @@ export default {
           task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
           this.$emit('submit', task)
           this.form = {
-            preCommondList: [''],
-            postCommondList: ['']
+            preCommandList: [{ path: '/', command: '' }],
+            postCommandList: [{ path: '/', command: '' }],
+            isUpload: false,
+            backup: true
           }
           if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
         } else {
@@ -155,8 +167,10 @@ export default {
     // 点击取消
     onCancel () {
       this.form = {
-        preCommondList: [''],
-        postCommondList: ['']
+        preCommandList: [{ path: '/', command: '' }],
+        postCommandList: [{ path: '/', command: '' }],
+        isUpload: false,
+        backup: true
       }
       if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
       this.$emit('cancel')

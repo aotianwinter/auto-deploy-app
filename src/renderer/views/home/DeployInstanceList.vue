@@ -68,10 +68,10 @@ export default {
           dataIndex: 'projectPath',
           title: '项目路径'
         },
-        {
-          dataIndex: 'postCommond',
-          title: '后置命令'
-        },
+        // {
+        //   dataIndex: 'postCammond',
+        //   title: '后置命令'
+        // },
         {
           dataIndex: 'lastExecutedTime',
           title: '上次执行时间'
