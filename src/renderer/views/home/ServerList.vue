@@ -74,7 +74,7 @@ export default {
     }
   },
   created () {
-    this._getServerList()
+    this.getServerList()
   },
   methods: {
     // 展示新增表单
@@ -93,10 +93,11 @@ export default {
     },
     // 提交表单
     submitForm (val, type = 'add') {
+      const form = JSON.parse(JSON.stringify(val))
       this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
-          type === 'add' ? await this._addServerList(val) : await this._editServerList(val)
-          this._getServerList()
+          type === 'add' ? await this.addServerList(form) : await this.editServerList(form)
+          this.getServerList()
           this.visible = false
           this.confirmLoading = false
           if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
@@ -112,8 +113,8 @@ export default {
     },
     // 删除信息
     async onDelete (_id) {
-      await this._deleteServerList(_id)
-      this._getServerList()
+      await this.deleteServerList(_id)
+      this.getServerList()
     }
   }
 }
