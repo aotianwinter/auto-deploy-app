@@ -21,7 +21,11 @@
               <a-icon title="delete" @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
             </a-popconfirm>
           </template>
-          <p>{{ item }}</p>
+          <template v-for="(val, key) in item">
+            <p v-if="key === 'name' || key === 'host' || key === 'port'" :key="key" >
+              {{ key }}：{{ val }}
+            </p>
+          </template>
         </a-collapse-panel>
       </a-collapse>
     </a-card>

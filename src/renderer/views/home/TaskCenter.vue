@@ -3,7 +3,7 @@
     <a-collapse defaultActiveKey="0" v-if="executingTaskList.length > 0">
       <a-collapse-panel v-for="(item, index) in executingTaskList" :key="index">
         <template #header>
-          {{ `Task ${index + 1}` }}
+          {{ `Task ${item.name}` }}
           <a-tag :color="taskStatusOptions[item.status].color">
             {{ taskStatusOptions[item.status].desc }}
           </a-tag>
@@ -88,8 +88,8 @@ export default {
   methods: {
     // 处理任务
     async handleTask (taskId, task) {
+      const { name, server, preCommandList, isUpload } = task
       try {
-        const { server, preCommandList, isUpload } = task
         this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
         const ssh = new NodeSSH()
         // ssh connect
@@ -140,7 +140,7 @@ export default {
             }
           }
         }
-        this._addTaskLogByTaskId(taskId, `🎉恭喜，所有任务已执行完成！${server.name}部署成功`, 'success')
+        this._addTaskLogByTaskId(taskId, `🎉恭喜，所有任务已执行完成，${name} 执行成功！`, 'success')
         this._changeTaskStatusByTaskId(taskId, 'passed')
         // if task in deploy instance list finshed then update status
         if (task._id) {
@@ -149,8 +149,13 @@ export default {
             status: 'passed'
           })
         }
+        // system notification
+        const myNotification = new Notification('✔ Success', {
+          body: `🎉恭喜，所有任务已执行完成，${name} 执行成功！`
+        })
+        console.log(myNotification)
       } catch (error) {
-        this._addTaskLogByTaskId(taskId, '❌任务执行中发生错误，请修改后再次尝试！', 'error')
+        this._addTaskLogByTaskId(taskId, `❌ ${name} 执行中发生错误，请修改后再次尝试！`, 'error')
         this._changeTaskStatusByTaskId(taskId, 'failed')
         console.log(error)
         // if task in deploy instance list finshed then update status
@@ -160,6 +165,11 @@ export default {
             status: 'failed'
           })
         }
+        // system notification
+        const myNotification = new Notification('❌Error', {
+          body: `❌ ${name} 执行中发生错误，请修改后再次尝试！`
+        })
+        console.log(myNotification)
       }
     },
     // 保存
