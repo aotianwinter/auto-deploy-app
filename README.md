@@ -1,8 +1,8 @@
 # auto-deploy-app
 
-> An electron-vue project
+> An electron-vue project about auto deploy and auto task
 
-#### Build Setup
+## Build Setup
 
 ``` bash
 # install dependencies

@@ -46,6 +46,11 @@ app.on('activate', () => {
   }
 })
 
+require('update-electron-app')({
+  repo: 'https://github.com/aotianwinter/my-auto-deploy.git',
+  updateInterval: '1 hour'
+})
+
 /**
  * Auto Updater
  *
