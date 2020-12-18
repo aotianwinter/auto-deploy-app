@@ -144,7 +144,7 @@ export default {
         this._changeTaskStatusByTaskId(taskId, 'passed')
         // if task in deploy instance list finshed then update status
         if (task._id) {
-          this._editDeployInstanceList({
+          this.editDeployInstanceList({
             ...task,
             status: 'passed'
           })
@@ -155,7 +155,7 @@ export default {
         console.log(error)
         // if task in deploy instance list finshed then update status
         if (task._id) {
-          this._editDeployInstanceList({
+          this.editDeployInstanceList({
             ...task,
             status: 'failed'
           })
@@ -163,10 +163,12 @@ export default {
       }
     },
     // 保存
-    saveDeployInstance (task) {
+    async saveDeployInstance (task) {
       const deployInstance = JSON.parse(JSON.stringify(task))
       if (deployInstance.logs) delete deployInstance.logs
-      task._id ? this._editDeployInstanceList(deployInstance) : this._addDeployInstanceList(deployInstance)
+      task._id ? await this.editDeployInstanceList(deployInstance) : await this.addDeployInstanceList(deployInstance)
+      this.$message.success('save success!')
+      this.$emit('switchTab', '3')
     },
     // 重新执行
     onRetry (task) {

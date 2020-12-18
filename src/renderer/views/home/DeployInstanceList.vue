@@ -112,12 +112,12 @@ export default {
   methods: {
     // on click delete
     async onDelete (_id) {
-      await this._deleteDeployInstanceList(_id)
-      this._getDeployInstanceList()
+      await this.deleteDeployInstanceList(_id)
+      this.getDeployInstanceList()
     },
     // on run task
     onRunTask (val) {
-      this.$emit('switchTaskTab')
+      this.$emit('switchTab', '2')
       const task = JSON.parse(JSON.stringify(val))
       task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
       this._addPendingTaskList(JSON.parse(JSON.stringify(task)))
@@ -132,11 +132,11 @@ export default {
       this.deployActionVisible = false
     },
     // 提交表单
-    onSubmit (val) {
+    async onSubmit (val) {
       const deployInstance = JSON.parse(JSON.stringify(val))
       this.deployActionVisible = false
-      this._editDeployInstanceList(deployInstance)
-      this._getDeployInstanceList()
+      await this.editDeployInstanceList(deployInstance)
+      this.getDeployInstanceList()
     }
   }
 }

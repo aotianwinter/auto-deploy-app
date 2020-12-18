@@ -1,18 +1,17 @@
 <template>
   <div>
-    <a-tabs v-model="activeKey" @change="onChangeTab">
+    <a-tabs v-model="activeKey" @tabClick="onTabClick">
       <a-tab-pane key="1" tab="Server Center">
         <ServerList />
         <a-button @click="showAddForm" type="dashed">deploy</a-button>
         <DeployAction title="Create Deploy Task" :visible="deployActionVisible"
-          :data="defaultForm"
-          @cancel="closeAddForm" @submit="onSubmit" />
+          :data="defaultForm" @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">
-        <TaskCenter />
+        <TaskCenter @switchTab="handleSwitchTab" />
       </a-tab-pane>
       <a-tab-pane key="3" tab="Deploy Instance">
-        <DeployInstanceList @switchTaskTab="activeKey = '2'" />
+        <DeployInstanceList @switchTab="handleSwitchTab" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -48,25 +47,29 @@ export default {
     }
   },
   methods: {
-    // 展示新增表单
+    // on tab click
+    onTabClick (activeKey) {
+      this.handleSwitchTab(activeKey)
+    },
+    // show add form
     showAddForm () {
       this.deployActionVisible = true
     },
-    // 关闭表单
+    // close add form
     closeAddForm () {
       this.deployActionVisible = false
     },
-    // 提交表单
+    // on submit form
     onSubmit (val) {
       this.deployActionVisible = false
       this._addPendingTaskList(val)
       this.activeKey = '2'
     },
-    onChangeTab (activeKey) {
-      switch (activeKey) {
-        case '3':
-          this._getDeployInstanceList()
-          break
+    // handle switch tab
+    async handleSwitchTab (activeKey) {
+      if (activeKey === '3') {
+        await this.getDeployInstanceList()
+        this.activeKey = '3'
       }
     }
   }

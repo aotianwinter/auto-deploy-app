@@ -103,6 +103,7 @@ const taskMixin = {
         ssh.execCommand(command, {
           cwd: path
         }).then((res) => {
+          console.log(res)
           const { stdout, stderr } = res
           if (stderr && !stdout) {
             this._addTaskLogByTaskId(taskId, `${command} 执行发生错误！`, 'error')
