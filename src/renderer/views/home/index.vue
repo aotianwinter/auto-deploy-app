@@ -4,7 +4,7 @@
       <a-tab-pane key="1" tab="Server Center">
         <ServerList />
         <a-button @click="showAddForm" type="dashed">deploy</a-button>
-        <DeployAction title="Create Deploy Task" :visible="deployActionVisible"
+        <InstanceForm title="Create Deploy Task" :visible="deployActionVisible"
           :data="defaultForm" @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">
@@ -19,7 +19,7 @@
 
 <script>
 import ServerList from './ServerList'
-import DeployAction from './DeployAction'
+import InstanceForm from './InstanceForm'
 import TaskCenter from './TaskCenter'
 import InstanceList from './InstanceList'
 import taskMixin from '@/store/task-mixin'
@@ -30,7 +30,7 @@ export default {
   mixins: [taskMixin, instanceMixin],
   components: {
     ServerList,
-    DeployAction,
+    InstanceForm,
     TaskCenter,
     InstanceList
   },

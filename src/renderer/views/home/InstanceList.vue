@@ -40,7 +40,7 @@
       </span>
     </a-table>
     <!-- modal -->
-    <DeployAction title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
+    <InstanceForm title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
@@ -48,14 +48,14 @@
 <script>
 import dayjs from 'dayjs'
 
-import DeployAction from './DeployAction'
+import InstanceForm from './InstanceForm'
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
 export default {
   name: 'InstanceList',
   mixins: [taskMixin, instanceMixin],
   components: {
-    DeployAction
+    InstanceForm
   },
   data () {
     return {

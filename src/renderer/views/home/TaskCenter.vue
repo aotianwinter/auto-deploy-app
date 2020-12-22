@@ -43,7 +43,7 @@
     </a-collapse>
     <a-empty description="No Task" v-else />
     <!-- modal -->
-    <DeployAction title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
+    <InstanceForm title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
@@ -54,7 +54,7 @@ import dayjs from 'dayjs'
 
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
-import DeployAction from './DeployAction'
+import InstanceForm from './InstanceForm'
 import LogView from '@/components/LogView'
 
 const { NodeSSH } = require('node-ssh')
@@ -63,7 +63,7 @@ export default {
   name: 'TaskCenter',
   mixins: [taskMixin, instanceMixin],
   components: {
-    DeployAction,
+    InstanceForm,
     LogView
   },
   data () {
