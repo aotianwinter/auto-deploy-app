@@ -168,7 +168,7 @@ export default {
         }
         // system notification
         const myNotification = new Notification('❌Error', {
-          body: `❌ ${name} 执行中发生错误，请修改后再次尝试！`
+          body: `🙃 ${name} 执行中发生错误，请修改后再次尝试！`
         })
         console.log(myNotification)
       }

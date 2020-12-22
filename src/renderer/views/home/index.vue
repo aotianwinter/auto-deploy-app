@@ -2,8 +2,15 @@
   <div>
     <a-tabs v-model="activeKey" @tabClick="onTabClick">
       <a-tab-pane key="1" tab="Server Center">
-        <ServerList />
-        <a-button @click="showAddForm" type="dashed">deploy</a-button>
+        <div class="flex-card-wrap">
+          <ServerList />
+          <!-- config card -->
+          <ConfigDir style="margin-left: 1rem" />
+        </div>
+        <!-- action -->
+        <div class="action-wrap">
+          <a-button @click="showAddForm" type="dashed">deploy</a-button>
+        </div>
         <InstanceForm title="Create Deploy Task" :visible="deployActionVisible"
           :data="defaultForm" @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
@@ -19,6 +26,7 @@
 
 <script>
 import ServerList from './ServerList'
+import ConfigDir from './ConfigDir'
 import InstanceForm from './InstanceForm'
 import TaskCenter from './TaskCenter'
 import InstanceList from './InstanceList'
@@ -30,6 +38,7 @@ export default {
   mixins: [taskMixin, instanceMixin],
   components: {
     ServerList,
+    ConfigDir,
     InstanceForm,
     TaskCenter,
     InstanceList
@@ -83,3 +92,13 @@ export default {
 }
 </script>
 
+<style lang="stylus" scoped>
+.flex-card-wrap
+  display inline-flex
+  // flex-direction row
+  // justify-content space-around
+  // align-items space-between
+  padding 0 1rem 1rem 1rem
+.action-wrap
+  text-align center
+</style>

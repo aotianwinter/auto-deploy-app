@@ -6,7 +6,7 @@
       <template #extra>
         <a-icon title="add" type="file-add" @click="showAddForm" />
       </template>
-      <a-collapse>
+      <a-collapse v-if="serverList.length > 0">
         <a-collapse-panel v-for="item in serverList" :key="item._id">
           <template #header>
             <!-- <a-avatar>{{ item.name.substring(0, 2) }}</a-avatar> -->
@@ -28,12 +28,14 @@
           </template>
         </a-collapse-panel>
       </a-collapse>
+      <!-- empty -->
+      <a-empty description="No Server" v-else />
     </a-card>
     <!-- modal -->
     <a-modal
       :title="modalTitle"
       :visible="visible"
-      @ok="submitForm(form, submitType)"
+      @ok="submitForm(submitType)"
       @cancel="onCancel"
     >
       <a-form-model :model="form" :rules="rules" ref="ruleForm">
@@ -46,11 +48,26 @@
         <a-form-model-item label="port" prop="port">
           <a-input-number v-model="form.port" :min="1" :max="65535" placeholder="22" />
         </a-form-model-item>
+        <!-- user pwd -->
         <a-form-model-item label="username" prop="username">
           <a-input v-model="form.username" placeholder="please input username of server" />
         </a-form-model-item>
         <a-form-model-item label="password" prop="password">
           <a-input-password v-model="form.password" placeholder="please input password of server" />
+        </a-form-model-item>
+        <!-- rsa key -->
+        <a-form-model-item label="privateKey" prop="privateKey">
+          <a-button @click="handleSelectDir">
+            <a-icon type="upload" />Click Project Dir
+          </a-button>
+          <p>
+            {{ form.privateKey }}
+            <a-icon v-show="form.privateKey" @click="handleClearDir"
+              title="delete" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+          </p>
+        </a-form-model-item>
+        <a-form-model-item label="passphrase" prop="passphrase">
+          <a-input v-model="form.passphrase" placeholder="please input passphrase of server" />
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -59,6 +76,7 @@
 
 <script>
 import serverMixin from '@/store/server-mixin'
+const { dialog } = require('electron').remote
 export default {
   name: 'ServerList',
   mixins: [serverMixin],
@@ -96,11 +114,11 @@ export default {
       this.visible = true
     },
     // 提交表单
-    submitForm (val, type = 'add') {
-      const form = JSON.parse(JSON.stringify(val))
+    submitForm (type = 'add') {
+      const submitForm = JSON.parse(JSON.stringify(this.form))
       this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
-          type === 'add' ? await this.addServerList(form) : await this.editServerList(form)
+          type === 'add' ? await this.addServerList(submitForm) : await this.editServerList(submitForm)
           this.getServerList()
           this.visible = false
           this.confirmLoading = false
@@ -109,6 +127,21 @@ export default {
           return false
         }
       })
+    },
+    // handle select id_rsa
+    handleSelectDir () {
+      const paths = dialog.showOpenDialog({
+        title: 'select project path'
+      })
+      if (paths && paths.length > 0) {
+        this.$set(this.form, 'privateKey', paths[0])
+      }
+    },
+    // handle clear id_rsa path
+    handleClearDir () {
+      if (this.form.privateKey) delete this.form.privateKey
+      if (this.form.passphrase) this.form.passphrase = ''
+      this.form = Object.assign({}, this.form, {})
     },
     // 点击取消
     onCancel () {
