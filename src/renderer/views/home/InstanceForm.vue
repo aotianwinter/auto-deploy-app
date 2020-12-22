@@ -77,8 +77,8 @@ import dayjs from 'dayjs'
 import serverMixin from '@/store/server-mixin'
 const { dialog } = require('electron').remote
 export default {
+  name: 'InstanceForm',
   mixins: [serverMixin],
-  name: 'DeployAction',
   props: {
     title: {
       type: String,
