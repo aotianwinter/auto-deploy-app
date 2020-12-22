@@ -11,7 +11,7 @@
         <TaskCenter @switchTab="handleSwitchTab" />
       </a-tab-pane>
       <a-tab-pane key="3" tab="Deploy Instance">
-        <DeployInstanceList @switchTab="handleSwitchTab" />
+        <InstanceList @switchTab="handleSwitchTab" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -21,18 +21,18 @@
 import ServerList from './ServerList'
 import DeployAction from './DeployAction'
 import TaskCenter from './TaskCenter'
-import DeployInstanceList from './DeployInstanceList'
+import InstanceList from './InstanceList'
 import taskMixin from '@/store/task-mixin'
-import deployInstanceMixin from '@/store/deploy-instance-mixin'
+import instanceMixin from '@/store/instance-mixin'
 
 export default {
   name: 'Home',
-  mixins: [taskMixin, deployInstanceMixin],
+  mixins: [taskMixin, instanceMixin],
   components: {
     ServerList,
     DeployAction,
     TaskCenter,
-    DeployInstanceList
+    InstanceList
   },
   data () {
     return {
@@ -67,9 +67,16 @@ export default {
     },
     // handle switch tab
     async handleSwitchTab (activeKey) {
-      if (activeKey === '3') {
-        await this.getDeployInstanceList()
-        this.activeKey = '3'
+      switch (activeKey) {
+        case '2':
+          this.activeKey = '2'
+          break
+        case '3':
+          await this.getInstanceList()
+          this.activeKey = '3'
+          break
+        default:
+          break
       }
     }
   }

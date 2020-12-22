@@ -1,31 +1,31 @@
-import { deployInstanceDB } from '@/core/datastore'
+import { instanceDB } from '@/core/datastore'
 
 const state = {
-  deployInstanceList: [] // saved deploy instance list
+  instanceList: [] // saved deploy instance list
 }
 
 const mutations = {
-  GET_DEPLOY_INSTANCE_LIST (state, array) {
-    state.deployInstanceList = array
+  GET_INSTANCE_LIST (state, array) {
+    state.instanceList = array
   }
 }
 
 const actions = {
-  getDeployInstanceList ({ commit }) {
+  getInstanceList ({ commit }) {
     return new Promise((resolve, reject) => {
-      deployInstanceDB.find({}, (err, docs) => {
+      instanceDB.find({}, (err, docs) => {
         if (err) {
           reject(err)
         } else {
-          commit('GET_DEPLOY_INSTANCE_LIST', docs)
+          commit('GET_INSTANCE_LIST', docs)
           resolve()
         }
       })
     })
   },
-  addDeployInstanceList ({ commit }, val) {
+  addInstanceList ({ commit }, val) {
     return new Promise((resolve, reject) => {
-      deployInstanceDB.insert({ ...val }, (err, docs) => {
+      instanceDB.insert({ ...val }, (err, docs) => {
         if (err) {
           reject(err)
         } else {
@@ -35,9 +35,9 @@ const actions = {
       })
     })
   },
-  editDeployInstanceList ({ commit }, val) {
+  editInstanceList ({ commit }, val) {
     return new Promise((resolve, reject) => {
-      deployInstanceDB.update({ _id: val._id }, { ...val }, (err, numReplaced) => {
+      instanceDB.update({ _id: val._id }, { ...val }, (err, numReplaced) => {
         if (err) {
           reject(err)
         } else {
@@ -47,9 +47,9 @@ const actions = {
       })
     })
   },
-  deleteDeployInstanceList ({ commit }, id) {
+  deleteInstanceList ({ commit }, id) {
     return new Promise((resolve, reject) => {
-      deployInstanceDB.remove({ _id: id }, { multi: false }, (err, numRemoved) => {
+      instanceDB.remove({ _id: id }, { multi: false }, (err, numRemoved) => {
         if (err) {
           reject(err)
         } else {

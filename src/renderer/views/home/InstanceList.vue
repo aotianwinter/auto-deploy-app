@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- table -->
-    <a-table :columns="columns" rowKey="_id" :data-source="deployInstanceList">
+    <a-table :columns="columns" rowKey="_id" :data-source="instanceList">
       <span slot="status" slot-scope="status">
         <a-tag :color="taskStatusOptions[status].color">
           {{ taskStatusOptions[status].desc }}
@@ -50,10 +50,10 @@ import dayjs from 'dayjs'
 
 import DeployAction from './DeployAction'
 import taskMixin from '@/store/task-mixin'
-import deployInstanceMixin from '@/store/deploy-instance-mixin'
+import instanceMixin from '@/store/instance-mixin'
 export default {
-  name: 'DeployInstanceList',
-  mixins: [taskMixin, deployInstanceMixin],
+  name: 'InstanceList',
+  mixins: [taskMixin, instanceMixin],
   components: {
     DeployAction
   },
@@ -112,8 +112,8 @@ export default {
   methods: {
     // on click delete
     async onDelete (_id) {
-      await this.deleteDeployInstanceList(_id)
-      this.getDeployInstanceList()
+      await this.deleteInstanceList(_id)
+      this.getInstanceList()
     },
     // on run task
     onRunTask (val) {
@@ -121,6 +121,7 @@ export default {
       const task = JSON.parse(JSON.stringify(val))
       task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
       this._addPendingTaskList(JSON.parse(JSON.stringify(task)))
+      this.$emit('switchTab', '2')
     },
     // 展示编辑表单
     showEditForm (val) {
@@ -133,10 +134,10 @@ export default {
     },
     // 提交表单
     async onSubmit (val) {
-      const deployInstance = JSON.parse(JSON.stringify(val))
+      const instance = JSON.parse(JSON.stringify(val))
       this.deployActionVisible = false
-      await this.editDeployInstanceList(deployInstance)
-      this.getDeployInstanceList()
+      await this.editInstanceList(instance)
+      this.getInstanceList()
     }
   }
 }

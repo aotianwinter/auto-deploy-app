@@ -14,6 +14,7 @@
         <!-- action -->
         <template #extra>
           <a-popconfirm
+            v-show="item.status !== 'running'"
             placement="left"
             title="Sure to save?"
             @confirm="() => saveDeployInstance(item)"
@@ -52,7 +53,7 @@ import { v4 as uuidv4 } from 'uuid'
 import dayjs from 'dayjs'
 
 import taskMixin from '@/store/task-mixin'
-import deployInstanceMixin from '@/store/deploy-instance-mixin'
+import instanceMixin from '@/store/instance-mixin'
 import DeployAction from './DeployAction'
 import LogView from '@/components/LogView'
 
@@ -60,7 +61,7 @@ const { NodeSSH } = require('node-ssh')
 const { join } = require('path')
 export default {
   name: 'TaskCenter',
-  mixins: [taskMixin, deployInstanceMixin],
+  mixins: [taskMixin, instanceMixin],
   components: {
     DeployAction,
     LogView
@@ -144,7 +145,7 @@ export default {
         this._changeTaskStatusByTaskId(taskId, 'passed')
         // if task in deploy instance list finshed then update status
         if (task._id) {
-          this.editDeployInstanceList({
+          this.editInstanceList({
             ...task,
             status: 'passed'
           })
@@ -160,7 +161,7 @@ export default {
         console.log(error)
         // if task in deploy instance list finshed then update status
         if (task._id) {
-          this.editDeployInstanceList({
+          this.editInstanceList({
             ...task,
             status: 'failed'
           })
@@ -174,9 +175,9 @@ export default {
     },
     // 保存
     async saveDeployInstance (task) {
-      const deployInstance = JSON.parse(JSON.stringify(task))
-      if (deployInstance.logs) delete deployInstance.logs
-      task._id ? await this.editDeployInstanceList(deployInstance) : await this.addDeployInstanceList(deployInstance)
+      const instance = JSON.parse(JSON.stringify(task))
+      if (instance.logs) delete instance.logs
+      task._id ? await this.editInstanceList(instance) : await this.addInstanceList(instance)
       this.$message.success('save success!')
       this.$emit('switchTab', '3')
     },
