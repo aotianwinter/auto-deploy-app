@@ -11,6 +11,17 @@ const mutations = {
 }
 
 const actions = {
+  getInstanceListByName ({ commit }, val) {
+    return new Promise((resolve, reject) => {
+      instanceDB.find({ name: val }, (err, docs) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
+  },
   getInstanceList ({ commit }) {
     return new Promise((resolve, reject) => {
       instanceDB.find({}, (err, docs) => {

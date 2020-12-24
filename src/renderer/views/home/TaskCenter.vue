@@ -175,6 +175,14 @@ export default {
     },
     // 保存
     async saveDeployInstance (task) {
+      // check instance name is exist when add
+      if (!task._id) {
+        const res = await this.getInstanceListByName(task.name)
+        if (res && res.length) {
+          this.$message.warning(`Exist the same instance's name, please edit and save again`)
+          return
+        }
+      }
       const instance = JSON.parse(JSON.stringify(task))
       if (instance.logs) delete instance.logs
       task._id ? await this.editInstanceList(instance) : await this.addInstanceList(instance)

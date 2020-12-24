@@ -8,6 +8,7 @@ const instanceMixin = {
   },
   methods: {
     ...mapActions([
+      'getInstanceListByName',
       'getInstanceList',
       'addInstanceList',
       'editInstanceList',

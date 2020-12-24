@@ -156,7 +156,6 @@ export default {
     submitForm (val) {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          // console.log(val)
           const task = JSON.parse(JSON.stringify(val))
           for (let item of this.serverList) {
             if (item._id === task.serverId) {
