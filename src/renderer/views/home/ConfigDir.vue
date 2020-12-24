@@ -6,7 +6,7 @@
         <a-icon @click="refreshTreeData" title="refresh" type="sync" />
         <a-icon @click="openDir" title="open folder" type="folder-open" />
       </template>
-      <a-alert message="点击右上角文件夹可添加相关配置文件至当前文件夹，用于保存相关配置信息" type="info" />
+      <a-alert style="margin-bottom: 1rem" message="可将配置信息保存至APP中管理，👉右上角可打开该文件夹" type="info" />
       <a-directory-tree v-if="treeData" :tree-data="treeData" :load-data="onLoadData" :loadedKeys="loadedKeys">
       </a-directory-tree>
       <!-- empty -->

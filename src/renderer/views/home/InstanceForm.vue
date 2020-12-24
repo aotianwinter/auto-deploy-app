@@ -23,8 +23,8 @@
         :label="index === 0 ? 'pre command ( path | command )' : ''"
       >
         <a-input-group compact style="width: calc(100% - 22px); margin-right: 8px">
-          <a-input v-model="form.preCommandList[index].path" style="width: 30%" placeholder="/home" />
-          <a-input v-model="form.preCommandList[index].command" style="width: 70%" placeholder="echo hello world" />
+          <a-textarea auto-size v-model="form.preCommandList[index].path" style="width: 30%" placeholder="/home" />
+          <a-textarea auto-size v-model="form.preCommandList[index].command" style="width: 70%" placeholder="echo hello world" />
         </a-input-group>
         <a-icon v-if="index === 0" title="add" type="plus-circle-o" @click="addCommand('preCommandList')" />
         <a-icon v-if="index > 0" title="remove" type="minus-circle-o" @click="removeCommand('preCommandList', index)" />
@@ -61,8 +61,8 @@
           :label="index === 0 ? 'post command ( path | command )' : ''"
         >
           <a-input-group compact style="width: calc(100% - 22px); margin-right: 8px">
-            <a-input v-model="form.postCommandList[index].path" style="width: 30%" placeholder="/home" />
-            <a-input v-model="form.postCommandList[index].command" style="width: 70%" placeholder="echo hello world" />
+            <a-textarea auto-size v-model="form.postCommandList[index].path" style="width: 30%" placeholder="/home" />
+            <a-textarea auto-size v-model="form.postCommandList[index].command" style="width: 70%" placeholder="echo hello world" />
           </a-input-group>
           <a-icon v-if="index === 0" title="add" type="plus-circle-o" @click="addCommand('postCommandList')" />
           <a-icon v-if="index > 0" title="remove" type="minus-circle-o" @click="removeCommand('postCommandList', index)" />
