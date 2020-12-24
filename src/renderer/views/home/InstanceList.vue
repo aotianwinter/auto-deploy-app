@@ -14,6 +14,13 @@
           </template>
         </p>
       </span>
+      <span slot="projectPath" slot-scope="projectPath">
+        <a-icon v-if="projectPath" theme="twoTone"
+          :title="checkDirExist(projectPath) ? 'normal' : 'not exist'"
+          :type="checkDirExist(projectPath) ? 'check-circle' : 'exclamation-circle'"
+          :two-tone-color="checkDirExist(projectPath) ? '#67C23A' : '#F56C6C'" />
+        {{ projectPath }}
+      </span>
       <span slot="postCommandList" slot-scope="postCommandList">
         <p v-for="(item, index) in postCommandList" :key="index">
           <template v-if="item.path && item.command">
@@ -23,6 +30,7 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <a-popconfirm
+          v-if="!record.projectPath || (record.projectPath && checkDirExist(record.projectPath))"
           placement="left"
           title="Sure to run task?"
           @confirm="() => onRunTask(record)"
@@ -51,6 +59,7 @@ import dayjs from 'dayjs'
 import InstanceForm from './InstanceForm'
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
+const fs = require('fs')
 export default {
   name: 'InstanceList',
   mixins: [taskMixin, instanceMixin],
@@ -85,7 +94,8 @@ export default {
         },
         {
           dataIndex: 'projectPath',
-          title: '项目路径'
+          title: '项目路径',
+          scopedSlots: { customRender: 'projectPath' }
         },
         {
           dataIndex: 'postCommandList',
@@ -138,6 +148,15 @@ export default {
       this.deployActionVisible = false
       await this.editInstanceList(instance)
       this.getInstanceList()
+    },
+    // 检查本地目录是否存在
+    checkDirExist (path) {
+      try {
+        fs.accessSync(path)
+        return true
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
