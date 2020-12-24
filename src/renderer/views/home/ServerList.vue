@@ -158,7 +158,4 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.anticon
-  margin-left 6px
-  font-size 18px
 </style>
