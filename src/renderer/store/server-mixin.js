@@ -8,6 +8,7 @@ const serverMixin = {
   },
   methods: {
     ...mapActions([
+      'getServerListByName',
       'getServerList',
       'addServerList',
       'editServerList',

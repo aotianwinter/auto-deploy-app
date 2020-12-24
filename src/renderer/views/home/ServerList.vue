@@ -118,6 +118,11 @@ export default {
       const submitForm = JSON.parse(JSON.stringify(this.form))
       this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
+          const res = await this.getServerListByName(this.form.name)
+          if (res && res.length) {
+            this.$message.warning(`Exist the same server's name, please edit and save again`)
+            return
+          }
           type === 'add' ? await this.addServerList(submitForm) : await this.editServerList(submitForm)
           this.getServerList()
           this.visible = false

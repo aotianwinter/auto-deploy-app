@@ -11,6 +11,17 @@ const mutations = {
 }
 
 const actions = {
+  getServerListByName ({ commit }, val) {
+    return new Promise((resolve, reject) => {
+      serverDB.find({ name: val }, (err, docs) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
+  },
   getServerList ({ commit }) {
     return new Promise((resolve, reject) => {
       serverDB.find({}, (err, docs) => {
