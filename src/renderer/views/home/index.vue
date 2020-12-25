@@ -51,7 +51,8 @@ export default {
         preCommandList: [{ path: '/', command: '' }],
         postCommandList: [{ path: '/', command: '' }],
         isUpload: false,
-        backup: true
+        backup: true,
+        projectType: 'dir'
       }
     }
   },

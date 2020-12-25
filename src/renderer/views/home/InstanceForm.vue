@@ -50,10 +50,24 @@
           </a-radio-group>
         </a-form-model-item>
         <a-form-model-item label="project path" prop="projectPath">
-          <a-button @click="handleSelectDir">
-            <a-icon type="upload" />Click Project Dir
+          <!-- select dir or file -->
+          <a-radio-group v-model="form.projectType" button-style="solid" @change="form.projectPath = ''">
+            <a-radio-button v-for="(item, index) in projectTypeOptions" :key="index" :value="item.value">
+              {{ item.label }}
+            </a-radio-button>
+          </a-radio-group>
+          <a-button style="margin-left: 2rem" @click="handleSelectFileOrDir(form.projectType)">
+            <a-icon type="upload" />Select {{ form.projectType }}
           </a-button>
-          <p>{{ form.projectPath }}</p>
+          <!-- show result when remote uploaded -->
+          <p>
+            {{ form.projectPath }}
+            <template v-if="form.projectPath && form.releasePath">
+            👉 {{
+              form.releasePath
+            }}<template v-if="form.projectType === 'file'">/{{ getFileName(form.projectPath) }}</template>
+            </template>
+          </p>
         </a-form-model-item>
         <!-- post command list -->
         <a-form-model-item
@@ -99,7 +113,8 @@ export default {
         preCommandList: [{ path: '/', command: '' }],
         postCommandList: [{ path: '/', command: '' }],
         isUpload: false,
-        backup: true
+        backup: true,
+        projectType: 'dir'
       },
       rules: {
         name: [ { required: true, message: 'Please input task name', trigger: 'blur' } ],
@@ -112,6 +127,10 @@ export default {
       openOptions: [
         { value: true, label: 'ON' },
         { value: false, label: 'OFF' }
+      ],
+      projectTypeOptions: [
+        { value: 'dir', label: 'dir' },
+        { value: 'file', label: 'file' }
       ]
     }
   },
@@ -148,7 +167,8 @@ export default {
           projectPath: '',
           postCommandList: [{ path: '/', command: '' }],
           isUpload: false,
-          backup: true
+          backup: true,
+          projectType: 'dir'
         }
       }
     },
@@ -168,7 +188,8 @@ export default {
             preCommandList: [{ path: '/', command: '' }],
             postCommandList: [{ path: '/', command: '' }],
             isUpload: false,
-            backup: true
+            backup: true,
+            projectType: 'dir'
           }
           if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
         } else {
@@ -182,20 +203,25 @@ export default {
         preCommandList: [{ path: '/', command: '' }],
         postCommandList: [{ path: '/', command: '' }],
         isUpload: false,
-        backup: true
+        backup: true,
+        projectType: 'dir'
       }
       if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
       this.$emit('cancel')
     },
     // 选择文件
-    handleSelectDir (evt) {
+    handleSelectFileOrDir (type) {
       const paths = dialog.showOpenDialog({
         title: 'select project path',
-        properties: ['openDirectory']
+        properties: [ type === 'dir' ? 'openDirectory' : 'openFile' ]
       })
       if (paths && paths.length > 0) {
-        this.$set(this.form, 'projectPath', paths[0])
+        this.$set(this.form, 'projectPath', paths[0].replace(/\\/g, '/'))
       }
+    },
+    // 获取文件名称
+    getFileName (val) {
+      return val.match(new RegExp(/([^/]+)$/))[1]
     }
   }
 }
