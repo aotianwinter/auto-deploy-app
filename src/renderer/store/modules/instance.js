@@ -47,6 +47,7 @@ const actions = {
     })
   },
   editInstanceList ({ commit }, val) {
+    if (val.logs) delete val.logs
     return new Promise((resolve, reject) => {
       instanceDB.update({ _id: val._id }, { ...val }, (err, numReplaced) => {
         if (err) {

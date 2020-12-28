@@ -101,22 +101,34 @@ export default {
             if (path && command) await this._runCommand(ssh, command, path, taskId)
           }
         }
+        // TODO 区分上传文件 文件夹
         // is upload
         if (isUpload) {
-          const { projectPath, releasePath, backup, postCommandList } = task
-          const deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
-          const releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
-          // compress dir and upload file
-          const localFile = join(remote.app.getPath('userData'), '/' + 'dist.zip')
-          if (projectPath) {
-            await this._compress(projectPath, localFile, [], 'dist/', taskId)
+          const { projectType, projectPath, releasePath, backup, postCommandList } = task
+          let deployDir = '' // 部署目录
+          let releaseDir = '' // 发布目录或文件
+          let localFile = '' // 待上传文件
+          if (projectType === 'dir') {
+            deployDir = releasePath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
+            releaseDir = releasePath.match(new RegExp(/([^/]+)$/))[1]
+            // compress dir and upload file
+            localFile = join(remote.app.getPath('userData'), '/' + 'dist.zip')
+            if (projectPath) {
+              await this._compress(projectPath, localFile, [], 'dist/', taskId)
+            }
+          } else {
+            deployDir = releasePath
+            releaseDir = projectPath.match(new RegExp(/([^/]+)$/))[1]
+            localFile = projectPath
           }
           // backup check
+          let checkFileType = '' // check file type
           if (backup) {
             this._addTaskLogByTaskId(taskId, '已开启远端备份', 'success')
+            checkFileType = projectType === 'dir' ? '-d' : '-f'
             await this._runCommand(ssh,
               `
-              if [ -d ${releaseDir} ];
+              if [ ${checkFileType} ${releaseDir} ];
               then mv ${releaseDir} ${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
               fi
               `, deployDir, taskId)
@@ -124,16 +136,20 @@ export default {
             this._addTaskLogByTaskId(taskId, '提醒：未开启远端备份', 'warning')
             await this._runCommand(ssh,
               `
-              if [ -d ${releaseDir} ];
+              if [ ${checkFileType} ${releaseDir} ];
               then mv ${releaseDir} /tmp/${releaseDir}_${dayjs().format('YYYY-MM-DD_HH:mm:ss')}
               fi
               `, deployDir, taskId)
           }
-          // upload unzip and clear
-          await this._uploadFile(ssh, localFile, deployDir + '/dist.zip', taskId)
-          await this._runCommand(ssh, 'unzip dist.zip', deployDir, taskId)
-          await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
-          await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
+          // upload file or dir (dir support unzip and clear)
+          if (projectType === 'dir') {
+            await this._uploadFile(ssh, localFile, deployDir + '/dist.zip', taskId)
+            await this._runCommand(ssh, 'unzip dist.zip', deployDir, taskId)
+            await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
+            await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
+          } else {
+            await this._uploadFile(ssh, localFile, deployDir + '/' + releaseDir, taskId)
+          }
           // run post command in postCommandList
           if (postCommandList && postCommandList instanceof Array) {
             for (const { path, command } of postCommandList) {
@@ -184,7 +200,6 @@ export default {
         }
       }
       const instance = JSON.parse(JSON.stringify(task))
-      if (instance.logs) delete instance.logs
       task._id ? await this.editInstanceList(instance) : await this.addInstanceList(instance)
       this.$message.success('save success!')
       this.$emit('switchTab', '3')
