@@ -14,12 +14,24 @@
           </template>
         </p>
       </span>
+      <span slot="localPreCommand" slot-scope="localPreCommand">
+        <p v-if="localPreCommand.path && localPreCommand.command">
+          <a-tag>{{ localPreCommand.path }}</a-tag>
+          <template>{{ localPreCommand.command }}</template>
+        </p>
+      </span>
       <span slot="projectPath" slot-scope="projectPath">
         <a-icon v-if="projectPath" theme="twoTone"
           :title="checkDirExist(projectPath) ? 'normal' : 'not exist'"
           :type="checkDirExist(projectPath) ? 'check-circle' : 'exclamation-circle'"
           :two-tone-color="checkDirExist(projectPath) ? '#67C23A' : '#F56C6C'" />
         {{ projectPath }}
+      </span>
+      <span slot="localPostCommand" slot-scope="localPostCommand">
+        <p v-if="localPostCommand.path && localPostCommand.command">
+          <a-tag>{{ localPostCommand.path }}</a-tag>
+          <template>{{ localPostCommand.command }}</template>
+        </p>
       </span>
       <span slot="postCommandList" slot-scope="postCommandList">
         <p v-for="(item, index) in postCommandList" :key="index">
@@ -93,9 +105,19 @@ export default {
           title: '发布路径'
         },
         {
+          dataIndex: 'localPreCommand',
+          title: 'local build command',
+          scopedSlots: { customRender: 'localPreCommand' }
+        },
+        {
           dataIndex: 'projectPath',
           title: '项目路径',
           scopedSlots: { customRender: 'projectPath' }
+        },
+        {
+          dataIndex: 'localPostCommand',
+          title: 'local clean command',
+          scopedSlots: { customRender: 'localPostCommand' }
         },
         {
           dataIndex: 'postCommandList',

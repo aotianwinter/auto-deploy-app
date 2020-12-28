@@ -122,15 +122,16 @@ export default {
   },
   data () {
     return {
-      form: {
+      form: {},
+      defaultForm: {
         preCommandList: [{ path: '/', command: '' }],
         postCommandList: [{ path: '/', command: '' }],
         isUpload: false,
         backup: true,
         projectPath: '',
         projectType: 'dir',
-        localPreCommand: {},
-        localPostCommand: {}
+        localPreCommand: { path: '', command: '' },
+        localPostCommand: { path: '', command: '' }
       },
       rules: {
         name: [ { required: true, message: 'Please input task name', trigger: 'blur' } ],
@@ -153,7 +154,7 @@ export default {
   watch: {
     data: {
       handler (newVal, oldVal) {
-        this.form = { ...this.form, ...newVal }
+        this.form = { ...this.defaultForm, ...newVal }
       },
       immediate: true
     }
