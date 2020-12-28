@@ -114,6 +114,7 @@ export default {
         postCommandList: [{ path: '/', command: '' }],
         isUpload: false,
         backup: true,
+        projectPath: '',
         projectType: 'dir'
       },
       rules: {
@@ -209,13 +210,14 @@ export default {
       if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
       this.$emit('cancel')
     },
-    // 选择文件
+    // 选择文件或文件夹
     handleSelectFileOrDir (type) {
       const paths = dialog.showOpenDialog({
         title: 'select project path',
         properties: [ type === 'dir' ? 'openDirectory' : 'openFile' ]
       })
       if (paths && paths.length > 0) {
+        // this.form.projectPath = paths[0].replace(/\\/g, '/')
         this.$set(this.form, 'projectPath', paths[0].replace(/\\/g, '/'))
       }
     },
