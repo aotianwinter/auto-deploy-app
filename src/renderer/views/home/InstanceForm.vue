@@ -68,6 +68,19 @@
             }}<template v-if="form.projectType === 'file'">/{{ getFileName(form.projectPath) }}</template>
             </template>
           </p>
+          <!-- pre command list -->
+          <template v-if="form.projectPath">
+            <p>local pre command ( path | command )</p>
+            <a-input-group compact>
+              <a-textarea auto-size v-model="form.localPreCommand.path" style="width: 30%" placeholder="local project path" />
+              <a-textarea auto-size v-model="form.localPreCommand.command" style="width: 70%" placeholder="build command" />
+            </a-input-group>
+            <p>local post command ( path | command )</p>
+            <a-input-group compact>
+              <a-textarea auto-size v-model="form.localPostCommand.path" style="width: 30%" placeholder="local project path" />
+              <a-textarea auto-size v-model="form.localPostCommand.command" style="width: 70%" placeholder="clean command" />
+            </a-input-group>
+          </template>
         </a-form-model-item>
         <!-- post command list -->
         <a-form-model-item
@@ -115,7 +128,9 @@ export default {
         isUpload: false,
         backup: true,
         projectPath: '',
-        projectType: 'dir'
+        projectType: 'dir',
+        localPreCommand: {},
+        localPostCommand: {}
       },
       rules: {
         name: [ { required: true, message: 'Please input task name', trigger: 'blur' } ],
@@ -138,7 +153,7 @@ export default {
   watch: {
     data: {
       handler (newVal, oldVal) {
-        this.form = newVal
+        this.form = { ...this.form, ...newVal }
       },
       immediate: true
     }
@@ -217,8 +232,10 @@ export default {
         properties: [ type === 'dir' ? 'openDirectory' : 'openFile' ]
       })
       if (paths && paths.length > 0) {
-        // this.form.projectPath = paths[0].replace(/\\/g, '/')
         this.$set(this.form, 'projectPath', paths[0].replace(/\\/g, '/'))
+        // set local pre / post command path
+        this.form.localPreCommand.path = this.form.projectPath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
+        this.form.localPostCommand.path = this.form.projectPath.replace(new RegExp(/([/][^/]+)$/), '') || '/'
       }
     },
     // 获取文件名称

@@ -47,13 +47,7 @@ export default {
     return {
       activeKey: '1',
       deployActionVisible: false,
-      defaultForm: {
-        preCommandList: [{ path: '/', command: '' }],
-        postCommandList: [{ path: '/', command: '' }],
-        isUpload: false,
-        backup: true,
-        projectType: 'dir'
-      }
+      defaultForm: {}
     }
   },
   methods: {
