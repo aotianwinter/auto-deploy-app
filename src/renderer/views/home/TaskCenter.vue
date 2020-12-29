@@ -1,8 +1,15 @@
 <template>
   <div class="page-wrap">
     <!-- task switch tab -->
-    <a-tabs type="card" v-if="executingTaskList.length > 0" animated>
-      <a-tab-pane v-for="(item, index) in executingTaskList" :key="index" :tab="`Task ${index + 1} ${item.name}`">
+    <a-tabs type="editable-card" hideAdd v-if="executingTaskList.length > 0" animated @edit="onEdit">
+      <a-tab-pane v-for="(item, index) in executingTaskList" :key="index">
+        <span slot="tab">
+          <a-icon type="code" />
+          {{ item.name }}
+          <a-icon v-show="item.status === 'running'" type="loading" />
+          <a-icon v-show="item.status === 'passed'" style="color: #67C23A" type="check-circle" />
+          <a-icon v-show="item.status === 'failed'" style="color: #F56C6C" type="exclamation-circle" />
+        </span>
         <a-card>
           <template #title>
             <a-tag :color="taskStatusOptions[item.status].color">
@@ -31,13 +38,6 @@
               <a-icon title="retry" @click.stop="" type="reload" style="color: #409EFF" />
             </a-popconfirm>
             <a-icon title="edit" @click.stop="showEditForm(item)" type="edit" />
-            <a-popconfirm
-              placement="left"
-              title="Sure to delete?"
-              @confirm="() => onDelete(item.taskId)"
-            >
-              <a-icon title="delete" @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
-            </a-popconfirm>
           </template>
           <LogView :logs="item.logs" />
         </a-card>
@@ -231,6 +231,21 @@ export default {
         this._cleanTaskLogByTaskId(taskId)
         this.handleTask(taskId, task)
       }
+    },
+    // tab action
+    onEdit (targetKey, action) {
+      this[action](targetKey)
+    },
+    // 删除任务
+    remove (targetKey) {
+      const _this = this
+      this.$confirm({
+        title: 'Sure to delete?',
+        onOk () {
+          if (_this.executingTaskList[targetKey]) _this.onDelete(_this.executingTaskList[targetKey].taskId)
+        },
+        onCancel () {}
+      })
     },
     onDelete (taskId) {
       if (taskId) this._removeExecutingTaskQueue(taskId)
