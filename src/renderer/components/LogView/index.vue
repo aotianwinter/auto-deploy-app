@@ -42,7 +42,7 @@ export default {
 .log-wrap
   color white
   background black
-  height 500px
+  height 700px
   overflow-y auto
   padding 1rem
 </style>

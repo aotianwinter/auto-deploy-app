@@ -1,46 +1,48 @@
 <template>
   <div class="page-wrap">
-    <a-collapse defaultActiveKey="0" v-if="executingTaskList.length > 0">
-      <a-collapse-panel v-for="(item, index) in executingTaskList" :key="index">
-        <template #header>
-          {{ `Task ${item.name}` }}
-          <a-tag :color="taskStatusOptions[item.status].color">
-            {{ taskStatusOptions[item.status].desc }}
-          </a-tag>
-          {{ item.server && item.server.name }}
-          <a-icon type="clock-circle" />
-          {{ `${item.lastExecutedTime}` }}
-        </template>
-        <!-- action -->
-        <template #extra>
-          <a-popconfirm
-            v-show="item.status !== 'running'"
-            placement="left"
-            title="Sure to save?"
-            @confirm="() => saveDeployInstance(item)"
-          >
-            <a-icon title="save" @click.stop="" type="save" theme="twoTone" two-tone-color="#67C23A" />
-          </a-popconfirm>
-          <a-popconfirm
-            placement="left"
-            title="Sure to clear logs and retry?"
-            @confirm="() => onRetry(item)"
-          >
-            <a-icon title="retry" @click.stop="" type="reload" style="color: #409EFF" />
-          </a-popconfirm>
-          <a-icon title="edit" @click.stop="showEditForm(item)" type="edit" />
-          <a-popconfirm
-            placement="left"
-            title="Sure to delete?"
-            @confirm="() => onDelete(item.taskId)"
-          >
-            <a-icon title="delete" @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
-          </a-popconfirm>
-        </template>
-        <!-- task log -->
-        <LogView :logs="item.logs" />
-      </a-collapse-panel>
-    </a-collapse>
+    <!-- task switch tab -->
+    <a-tabs type="card" v-if="executingTaskList.length > 0" animated>
+      <a-tab-pane v-for="(item, index) in executingTaskList" :key="index" :tab="`Task ${index + 1} ${item.name}`">
+        <a-card>
+          <template #title>
+            <a-tag :color="taskStatusOptions[item.status].color">
+              {{ taskStatusOptions[item.status].desc }}
+            </a-tag>
+            <a-icon type="database" />
+            {{ item.server && item.server.name }}
+            <a-icon type="clock-circle" />
+            {{ `${item.lastExecutedTime}` }}
+          </template>
+          <!-- action -->
+          <template #extra>
+            <a-popconfirm
+              v-show="item.status !== 'running'"
+              placement="left"
+              title="Sure to save?"
+              @confirm="() => saveDeployInstance(item)"
+            >
+              <a-icon title="save" @click.stop="" type="save" theme="twoTone" two-tone-color="#67C23A" />
+            </a-popconfirm>
+            <a-popconfirm
+              placement="left"
+              title="Sure to clear logs and retry?"
+              @confirm="() => onRetry(item)"
+            >
+              <a-icon title="retry" @click.stop="" type="reload" style="color: #409EFF" />
+            </a-popconfirm>
+            <a-icon title="edit" @click.stop="showEditForm(item)" type="edit" />
+            <a-popconfirm
+              placement="left"
+              title="Sure to delete?"
+              @confirm="() => onDelete(item.taskId)"
+            >
+              <a-icon title="delete" @click.stop="" type="delete" theme="twoTone" two-tone-color="#F56C6C" />
+            </a-popconfirm>
+          </template>
+          <LogView :logs="item.logs" />
+        </a-card>
+      </a-tab-pane>
+    </a-tabs>
     <a-empty description="No Task" v-else />
     <!-- modal -->
     <InstanceForm title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"

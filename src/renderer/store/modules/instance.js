@@ -35,6 +35,7 @@ const actions = {
     })
   },
   addInstanceList ({ commit }, val) {
+    if (val.logs) delete val.logs
     return new Promise((resolve, reject) => {
       instanceDB.insert({ ...val }, (err, docs) => {
         if (err) {
