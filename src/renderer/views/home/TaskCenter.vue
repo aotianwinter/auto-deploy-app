@@ -28,16 +28,16 @@
               title="Sure to save?"
               @confirm="() => saveDeployInstance(item)"
             >
-              <a-icon title="save" @click.stop="" type="save" theme="twoTone" two-tone-color="#67C23A" />
+              <a-icon title="save" type="save" theme="twoTone" two-tone-color="#67C23A" />
             </a-popconfirm>
             <a-popconfirm
               placement="left"
               title="Sure to clear logs and retry?"
               @confirm="() => onRetry(item)"
             >
-              <a-icon title="retry" @click.stop="" type="reload" style="color: #409EFF" />
+              <a-icon title="retry" type="reload" style="color: #409EFF" />
             </a-popconfirm>
-            <a-icon title="edit" @click.stop="showEditForm(item)" type="edit" />
+            <a-icon title="edit" @click="showEditForm(item)" type="edit" />
           </template>
           <LogView :logs="item.logs" />
         </a-card>

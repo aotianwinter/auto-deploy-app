@@ -20,7 +20,7 @@
       <!-- pre command list -->
       <a-form-model-item
         v-for="(item, index) in form.preCommandList" :key="index"
-        :label="index === 0 ? 'pre command ( path | command )' : ''"
+        :label="index === 0 ? 'remote pre command ( path | command )' : ''"
       >
         <a-input-group compact style="width: calc(100% - 22px); margin-right: 8px">
           <a-textarea auto-size v-model="form.preCommandList[index].path" style="width: 30%" placeholder="/home" />
@@ -73,7 +73,7 @@
           <!-- pre command list -->
           <template v-if="form.projectPath">
             <p>
-              local pre command ( path | command )
+              local build command ( path | command )
               <a-tooltip>
                 <template slot="title">
                   windows: PowerShell<br />
@@ -88,7 +88,7 @@
               <a-textarea auto-size v-model="form.localPreCommand.command" style="width: 70%" placeholder="build command" />
             </a-input-group>
             <p>
-              local post command ( path | command )
+              local clean command ( path | command )
               <a-tooltip>
                 <template slot="title">
                   windows: PowerShell<br />
@@ -107,7 +107,7 @@
         <!-- post command list -->
         <a-form-model-item
           v-for="(item, index) in form.postCommandList" :key="index"
-          :label="index === 0 ? 'post command ( path | command )' : ''"
+          :label="index === 0 ? 'remote post command ( path | command )' : ''"
         >
           <a-input-group compact style="width: calc(100% - 22px); margin-right: 8px">
             <a-textarea auto-size v-model="form.postCommandList[index].path" style="width: 30%" placeholder="/home" />
