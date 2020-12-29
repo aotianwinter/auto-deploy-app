@@ -104,7 +104,13 @@ export default {
         // TODO 区分上传文件 文件夹
         // is upload
         if (isUpload) {
-          const { projectType, projectPath, releasePath, backup, postCommandList } = task
+          const { projectType, localPreCommand, projectPath, localPostCommand,
+            releasePath, backup, postCommandList } = task
+          // run local pre command
+          if (localPreCommand) {
+            const { path, command } = localPreCommand
+            if (path && command) await this._runLocalCommand(command, path, taskId)
+          }
           let deployDir = '' // 部署目录
           let releaseDir = '' // 发布目录或文件
           let localFile = '' // 待上传文件
@@ -122,10 +128,9 @@ export default {
             localFile = projectPath
           }
           // backup check
-          let checkFileType = '' // check file type
+          let checkFileType = projectType === 'dir' ? '-d' : '-f' // check file type
           if (backup) {
             this._addTaskLogByTaskId(taskId, '已开启远端备份', 'success')
-            checkFileType = projectType === 'dir' ? '-d' : '-f'
             await this._runCommand(ssh,
               `
               if [ ${checkFileType} ${releaseDir} ];
@@ -149,6 +154,11 @@ export default {
             await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
           } else {
             await this._uploadFile(ssh, localFile, deployDir + '/' + releaseDir, taskId)
+          }
+          // run local post command
+          if (localPostCommand) {
+            const { path, command } = localPostCommand
+            if (path && command) await this._runLocalCommand(command, path, taskId)
           }
           // run post command in postCommandList
           if (postCommandList && postCommandList instanceof Array) {

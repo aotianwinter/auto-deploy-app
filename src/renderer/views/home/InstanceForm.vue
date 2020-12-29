@@ -51,7 +51,7 @@
         </a-form-model-item>
         <a-form-model-item label="project path" prop="projectPath">
           <!-- select dir or file -->
-          <a-radio-group v-model="form.projectType" button-style="solid" @change="form.projectPath = ''">
+          <a-radio-group v-model="form.projectType" button-style="solid" @change="onChangeProjectType">
             <a-radio-button v-for="(item, index) in projectTypeOptions" :key="index" :value="item.value">
               {{ item.label }}
             </a-radio-button>
@@ -61,7 +61,9 @@
           </a-button>
           <!-- show result when remote uploaded -->
           <p>
-            {{ form.projectPath }}
+            <!-- {{ form.projectPath }} -->
+            <a-textarea v-if="form.projectPath" style="width: 30%; vertical-align: middle"
+              auto-size v-model="form.projectPath" placeholder="local project path" />
             <template v-if="form.projectPath && form.releasePath">
             👉 {{
               form.releasePath
@@ -70,12 +72,32 @@
           </p>
           <!-- pre command list -->
           <template v-if="form.projectPath">
-            <p>local pre command ( path | command )</p>
+            <p>
+              local pre command ( path | command )
+              <a-tooltip>
+                <template slot="title">
+                  windows: PowerShell<br />
+                  unix: /bin/sh<br />
+                  请确保符合语法要求 不使用无需填写
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </p>
             <a-input-group compact>
               <a-textarea auto-size v-model="form.localPreCommand.path" style="width: 30%" placeholder="local project path" />
               <a-textarea auto-size v-model="form.localPreCommand.command" style="width: 70%" placeholder="build command" />
             </a-input-group>
-            <p>local post command ( path | command )</p>
+            <p>
+              local post command ( path | command )
+              <a-tooltip>
+                <template slot="title">
+                  windows: PowerShell<br />
+                  unix: /bin/sh<br />
+                  请确保符合语法要求 不使用无需填写
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </p>
             <a-input-group compact>
               <a-textarea auto-size v-model="form.localPostCommand.path" style="width: 30%" placeholder="local project path" />
               <a-textarea auto-size v-model="form.localPostCommand.command" style="width: 70%" placeholder="clean command" />
@@ -185,7 +207,9 @@ export default {
           postCommandList: [{ path: '/', command: '' }],
           isUpload: false,
           backup: true,
-          projectType: 'dir'
+          projectType: 'dir',
+          localPreCommand: { path: '', command: '' },
+          localPostCommand: { path: '', command: '' }
         }
       }
     },
@@ -201,13 +225,7 @@ export default {
           }
           task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
           this.$emit('submit', task)
-          this.form = {
-            preCommandList: [{ path: '/', command: '' }],
-            postCommandList: [{ path: '/', command: '' }],
-            isUpload: false,
-            backup: true,
-            projectType: 'dir'
-          }
+          this.form = JSON.parse(JSON.stringify(this.defaultForm))
           if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
         } else {
           return false
@@ -216,15 +234,14 @@ export default {
     },
     // 点击取消
     onCancel () {
-      this.form = {
-        preCommandList: [{ path: '/', command: '' }],
-        postCommandList: [{ path: '/', command: '' }],
-        isUpload: false,
-        backup: true,
-        projectType: 'dir'
-      }
+      this.form = JSON.parse(JSON.stringify(this.defaultForm))
       if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
       this.$emit('cancel')
+    },
+    onChangeProjectType () {
+      this.form.projectPath = ''
+      this.form.localPreCommand = { path: '', command: '' }
+      this.form.localPostCommand = { path: '', command: '' }
     },
     // 选择文件或文件夹
     handleSelectFileOrDir (type) {

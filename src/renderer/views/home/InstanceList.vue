@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- table -->
-    <a-table :columns="columns" rowKey="_id" :data-source="instanceList">
+    <a-table style="overflow-y: auto" :columns="columns" rowKey="_id" :data-source="instanceList">
       <span slot="status" slot-scope="status">
         <a-tag :color="taskStatusOptions[status].color">
           {{ taskStatusOptions[status].desc }}
@@ -42,7 +42,6 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <a-popconfirm
-          v-if="!record.projectPath || (record.projectPath && checkDirExist(record.projectPath))"
           placement="left"
           title="Sure to run task?"
           @confirm="() => onRunTask(record)"

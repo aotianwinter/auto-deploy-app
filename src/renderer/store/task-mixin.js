@@ -3,6 +3,8 @@ const _ = require('lodash')
 const fs = require('fs')
 const join = require('path').join
 const archiver = require('archiver')
+const { exec } = require('child_process')
+const os = require('os')
 
 const taskMixin = {
   data () {
@@ -160,6 +162,24 @@ const taskMixin = {
     _filterExcludeFiles (targetDir, excludeFiles = []) {
       return fs.readdirSync(targetDir).filter(file => {
         return (!excludeFiles.includes(file))
+      })
+    },
+    // local run command (shell指令、执行路径、taskId)
+    _runLocalCommand (command, path = '/', taskId) {
+      return new Promise((resolve, reject) => {
+        this._addTaskLogByTaskId(taskId, `${command} 执行中...`)
+        const terminal = os.type() === 'Windows_NT' ? 'powershell.exe ' : ''
+        exec(terminal + command, { cwd: path }, (error, stdout, stderr) => {
+          if (error) {
+            this._addTaskLogByTaskId(taskId, `${command} 执行发生错误！`, 'error')
+            this._addTaskLogByTaskId(taskId, stderr, 'error')
+            this._addTaskLogByTaskId(taskId, '请检查远端环境中该命令是否有效！', 'warning')
+            reject(error)
+          }
+          this._addTaskLogByTaskId(taskId, stdout)
+          this._addTaskLogByTaskId(taskId, `${command} 执行完成！`, 'success')
+          resolve()
+        })
       })
     },
     // 文件上传(ssh对象、配置信息、本地待上传文件)
