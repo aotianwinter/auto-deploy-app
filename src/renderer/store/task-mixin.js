@@ -56,9 +56,9 @@ const taskMixin = {
         taskId
       })
     },
-    // change task by task id
-    _changeTaskByTaskId (taskId, val) {
-      this.$store.commit('UPDATE_TASK', {
+    // init task by task id
+    _initTaskByTaskId (taskId, val) {
+      this.$store.commit('INIT_TASK', {
         taskId,
         task: JSON.parse(JSON.stringify(val))
       })
@@ -77,11 +77,12 @@ const taskMixin = {
     _cleanTaskLogByTaskId (taskId) {
       this.$store.commit('CLEAN_TASK_LOG', { taskId })
     },
-    // change task status by task id
-    _changeTaskStatusByTaskId (taskId, status = 'running') {
+    // change task status and cost time by task id
+    _changeTaskStatusAndCostTimeByTaskId (taskId, status = 'running', time = 0) {
       this.$store.commit('UPDATE_TASK_STATUS', {
         taskId,
-        status
+        status,
+        lastCostTime: time
       })
     },
     // ssh connect (ssh对象、ssh连接信息、taskId)

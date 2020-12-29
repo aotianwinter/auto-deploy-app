@@ -128,6 +128,10 @@ export default {
           title: '上次执行时间'
         },
         {
+          dataIndex: 'lastCostTime',
+          title: '上次总用时(s)'
+        },
+        {
           dataIndex: 'status',
           title: '上次执行状态',
           scopedSlots: { customRender: 'status' }

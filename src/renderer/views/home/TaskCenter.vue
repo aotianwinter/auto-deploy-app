@@ -90,8 +90,10 @@ export default {
     // 处理任务
     async handleTask (taskId, task) {
       const { name, server, preCommandList, isUpload } = task
+      const startTime = new Date().getTime() // 计时开始
+      let endTime = 0 // 计时结束
+      this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
       try {
-        this._addTaskLogByTaskId(taskId, '⚡开始执行任务...', 'primary')
         const ssh = new NodeSSH()
         // ssh connect
         await this._connectServe(ssh, server, taskId)
@@ -168,12 +170,15 @@ export default {
           }
         }
         this._addTaskLogByTaskId(taskId, `🎉恭喜，所有任务已执行完成，${name} 执行成功！`, 'success')
-        this._changeTaskStatusByTaskId(taskId, 'passed')
+        // 计时结束
+        endTime = new Date().getTime()
+        const costTime = ((endTime - startTime) / 1000).toFixed(2)
+        this._addTaskLogByTaskId(taskId, `总计耗时 ${costTime}s`, 'primary')
+        this._changeTaskStatusAndCostTimeByTaskId(taskId, 'passed', costTime)
         // if task in deploy instance list finshed then update status
         if (task._id) {
           this.editInstanceList({
-            ...task,
-            status: 'passed'
+            ...task
           })
         }
         // system notification
@@ -183,13 +188,16 @@ export default {
         console.log(myNotification)
       } catch (error) {
         this._addTaskLogByTaskId(taskId, `❌ ${name} 执行中发生错误，请修改后再次尝试！`, 'error')
-        this._changeTaskStatusByTaskId(taskId, 'failed')
+        // 计时结束
+        endTime = new Date().getTime()
+        const costTime = ((endTime - startTime) / 1000).toFixed(2)
+        this._addTaskLogByTaskId(taskId, `总计耗时 ${costTime}s`, 'primary')
+        this._changeTaskStatusAndCostTimeByTaskId(taskId, 'failed', costTime)
         console.log(error)
         // if task in deploy instance list finshed then update status
         if (task._id) {
           this.editInstanceList({
-            ...task,
-            status: 'failed'
+            ...task
           })
         }
         // system notification
@@ -239,7 +247,7 @@ export default {
       const task = JSON.parse(JSON.stringify(val))
       const { taskId } = task
       this.deployActionVisible = false
-      this._changeTaskByTaskId(taskId, task)
+      this._initTaskByTaskId(taskId, task)
       this._addTaskLogByTaskId(taskId, '⚡即将执行更新后的任务...', 'primary')
       this.handleTask(taskId, task)
     }

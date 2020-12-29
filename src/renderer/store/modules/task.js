@@ -33,15 +33,16 @@ const mutations = {
       state.executingTaskQueue = Object.assign({}, state.executingTaskQueue, {})
     }
   },
-  UPDATE_TASK (state, { taskId, task }) {
+  INIT_TASK (state, { taskId, task }) {
     if (state.executingTaskQueue[taskId]) {
       state.executingTaskQueue = Object.assign({}, state.executingTaskQueue,
         { [taskId]: { ...task, status: 'running' } })
     }
   },
-  UPDATE_TASK_STATUS (state, { taskId, status }) {
+  UPDATE_TASK_STATUS (state, { taskId, status, lastCostTime }) {
     if (state.executingTaskQueue[taskId]) {
       state.executingTaskQueue[taskId].status = status
+      state.executingTaskQueue[taskId].lastCostTime = lastCostTime
     }
   },
   ADD_TASK_LOG (state, { taskId, log }) {
