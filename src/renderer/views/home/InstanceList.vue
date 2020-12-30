@@ -59,7 +59,7 @@
       </span>
     </a-table>
     <!-- modal -->
-    <InstanceForm title="Update Task" :data="curTask" :visible="deployActionVisible"
+    <TaskForm title="Update Task" :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
@@ -67,7 +67,7 @@
 <script>
 import dayjs from 'dayjs'
 
-import InstanceForm from './InstanceForm'
+import TaskForm from './TaskForm'
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
 const fs = require('fs')
@@ -75,7 +75,7 @@ export default {
   name: 'InstanceList',
   mixins: [taskMixin, instanceMixin],
   components: {
-    InstanceForm
+    TaskForm
   },
   data () {
     return {

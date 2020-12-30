@@ -128,7 +128,7 @@ import HelpView from './HelpView'
 import serverMixin from '@/store/server-mixin'
 const { dialog } = require('electron').remote
 export default {
-  name: 'DeployAction',
+  name: 'TaskForm',
   mixins: [serverMixin],
   components: {
     HelpView
@@ -136,7 +136,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Deploy Task'
+      default: 'Task Form'
     },
     data: {
       type: Object,

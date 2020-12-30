@@ -14,10 +14,10 @@
             Create Task
           </a-button>
         </div>
-        <InstanceForm title="Create Task" :visible="deployActionVisible"
+        <TaskForm title="Create Task" :visible="deployActionVisible"
           :data="defaultForm" @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
-      <a-tab-pane key="2" tab="Task Center">
+      <a-tab-pane key="2" tab="Executing task">
         <TaskCenter @switchTab="handleSwitchTab" />
       </a-tab-pane>
       <a-tab-pane key="3" tab="Task Instance">
@@ -30,7 +30,7 @@
 <script>
 import ServerList from './ServerList'
 import AppData from './AppData'
-import InstanceForm from './InstanceForm'
+import TaskForm from './TaskForm'
 import TaskCenter from './TaskCenter'
 import InstanceList from './InstanceList'
 import taskMixin from '@/store/task-mixin'
@@ -43,7 +43,7 @@ export default {
   components: {
     ServerList,
     AppData,
-    InstanceForm,
+    TaskForm,
     TaskCenter,
     InstanceList,
     HelpView

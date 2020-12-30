@@ -45,7 +45,7 @@
     </a-tabs>
     <a-empty description="No Task" v-else />
     <!-- modal -->
-    <InstanceForm title="Update Task" :data="curTask" :visible="deployActionVisible"
+    <TaskForm title="Update Task" :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
@@ -56,7 +56,7 @@ import dayjs from 'dayjs'
 
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
-import InstanceForm from './InstanceForm'
+import TaskForm from './TaskForm'
 import LogView from '@/components/LogView'
 
 const { NodeSSH } = require('node-ssh')
@@ -65,7 +65,7 @@ export default {
   name: 'TaskCenter',
   mixins: [taskMixin, instanceMixin],
   components: {
-    InstanceForm,
+    TaskForm,
     LogView
   },
   data () {
