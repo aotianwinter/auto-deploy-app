@@ -96,7 +96,7 @@ export default {
         },
         {
           dataIndex: 'preCommandList',
-          title: '前置命令',
+          title: '远端前置命令',
           scopedSlots: { customRender: 'preCommandList' }
         },
         {
@@ -105,7 +105,7 @@ export default {
         },
         {
           dataIndex: 'localPreCommand',
-          title: 'local build command',
+          title: '本地编译命令',
           scopedSlots: { customRender: 'localPreCommand' }
         },
         {
@@ -115,12 +115,12 @@ export default {
         },
         {
           dataIndex: 'localPostCommand',
-          title: 'local clean command',
+          title: '本地清理命令',
           scopedSlots: { customRender: 'localPostCommand' }
         },
         {
           dataIndex: 'postCommandList',
-          title: '后置命令',
+          title: '远端后置命令',
           scopedSlots: { customRender: 'postCommandList' }
         },
         {
