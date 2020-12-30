@@ -6,7 +6,6 @@
           <ServerList />
           <!-- config card -->
           <AppData style="margin-left: 1rem" />
-          <HelpView style="font-size: 1.5rem; margin-left: 1rem" />
         </div>
         <!-- action -->
         <div class="action-wrap">
@@ -29,6 +28,7 @@
       <p title="version">
         <a-icon @click="openUrl('https://github.com/aotianwinter/auto-deploy-app/releases')" type="thunderbolt" />
         v0.1.0
+        <HelpView />
       </p>
       <p title="author 打酱油">
         <a-icon @click="openUrl('https://github.com/electron/update-electron-app')" type="github" />
