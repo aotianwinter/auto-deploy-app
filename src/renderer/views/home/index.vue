@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-wrap">
     <a-tabs v-model="activeKey" @tabClick="onTabClick">
       <a-tab-pane key="1" tab="Server Center">
         <div class="flex-card-wrap">
@@ -109,18 +109,21 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.flex-card-wrap
-  display inline-flex
-  padding 0 1rem 1rem 1rem
-.action-wrap
-  text-align center
-.footer
-  display inline-flex
-  justify-content space-between
-  position fixed
-  left 0
-  bottom 0
-  width 100%
-  padding 4px 0.5rem
-  background white
+.app-wrap
+  padding-bottom 30px
+  .flex-card-wrap
+    display inline-flex
+    padding 0 1rem
+  .action-wrap
+    text-align center
+    padding 1rem 0
+  .footer
+    display inline-flex
+    justify-content space-between
+    position fixed
+    left 0
+    bottom 0
+    width 100%
+    padding 4px 0.5rem
+    background white
 </style>
