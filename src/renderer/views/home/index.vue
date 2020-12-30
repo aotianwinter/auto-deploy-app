@@ -24,6 +24,17 @@
         <InstanceList @switchTab="handleSwitchTab" />
       </a-tab-pane>
     </a-tabs>
+    <!-- footer -->
+    <footer class="footer">
+      <p title="version">
+        <a-icon @click="openUrl('https://github.com/aotianwinter/auto-deploy-app/releases')" type="thunderbolt" />
+        v0.1.0
+      </p>
+      <p title="author 打酱油">
+        <a-icon @click="openUrl('https://github.com/electron/update-electron-app')" type="github" />
+        打酱油
+      </p>
+    </footer>
   </div>
 </template>
 
@@ -37,6 +48,7 @@ import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
 import HelpView from './HelpView'
 
+const { shell } = require('electron')
 export default {
   name: 'Home',
   mixins: [taskMixin, instanceMixin],
@@ -87,6 +99,10 @@ export default {
         default:
           break
       }
+    },
+    // open url
+    openUrl (url) {
+      shell.openExternal(url)
     }
   }
 }
@@ -98,4 +114,13 @@ export default {
   padding 0 1rem 1rem 1rem
 .action-wrap
   text-align center
+.footer
+  display inline-flex
+  justify-content space-between
+  position fixed
+  left 0
+  bottom 0
+  width 100%
+  padding 4px 0.5rem
+  background white
 </style>

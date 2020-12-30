@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, autoUpdater, BrowserWindow, dialog } from 'electron'
+import { app, BrowserWindow } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -44,25 +44,6 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
-})
-
-require('update-electron-app')({
-  repo: 'https://github.com/aotianwinter/my-auto-deploy.git',
-  updateInterval: '1 hour'
-})
-
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail: 'A new version has been downloaded. Reload the application to apply the update'
-  }
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAnd()
-  })
 })
 
 /**
