@@ -45,7 +45,7 @@
     </a-tabs>
     <a-empty description="No Task" v-else />
     <!-- modal -->
-    <InstanceForm title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
+    <InstanceForm title="Update Task" :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
@@ -105,7 +105,6 @@ export default {
             if (path && command) await this._runCommand(ssh, command, path, taskId)
           }
         }
-        // TODO 区分上传文件 文件夹
         // is upload
         if (isUpload) {
           const { projectType, localPreCommand, projectPath, localPostCommand,

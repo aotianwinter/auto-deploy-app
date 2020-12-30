@@ -3,6 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title>auto-deploy-app</title>
+    <style>
+      .welcome-wrap {
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
     <% if (htmlWebpackPlugin.options.nodeModules) { %>
       <!-- Add `node_modules/` to global paths so `require` works properly in development -->
       <script>
@@ -11,7 +20,14 @@
     <% } %>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="welcome-wrap">
+        <div>
+          <h2>🎉 Welcome to auto-deploy-app ✨</h2>
+          <h2>⏳ Page Loading......</h2>
+        </div>
+      </div>
+    </div>
     <!-- Set `__static` path to static files in production -->
     <% if (!process.browser) { %>
       <script>

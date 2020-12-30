@@ -1,11 +1,13 @@
 <template>
   <!-- modal -->
   <a-modal
-    :title="title"
     :visible="visible"
     @ok="submitForm(form)"
     @cancel="onCancel"
   >
+    <template #title>
+      {{ title }} <HelpView />
+    </template>
     <a-form-model :model="form" :rules="rules" ref="ruleForm">
       <a-form-model-item label="name" prop="name">
         <a-input v-model="form.name" allowClear placeholder="please input your task name" />
@@ -122,12 +124,15 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-
+import HelpView from './HelpView'
 import serverMixin from '@/store/server-mixin'
 const { dialog } = require('electron').remote
 export default {
-  mixins: [serverMixin],
   name: 'DeployAction',
+  mixins: [serverMixin],
+  components: {
+    HelpView
+  },
   props: {
     title: {
       type: String,

@@ -5,19 +5,22 @@
         <div class="flex-card-wrap">
           <ServerList />
           <!-- config card -->
-          <ConfigDir style="margin-left: 1rem" />
+          <AppData style="margin-left: 1rem" />
+          <HelpView style="font-size: 1.5rem; margin-left: 1rem" />
         </div>
         <!-- action -->
         <div class="action-wrap">
-          <a-button @click="showAddForm" type="dashed">deploy</a-button>
+          <a-button @click="showAddForm" type="dashed">
+            Create Task
+          </a-button>
         </div>
-        <InstanceForm title="Create Deploy Task" :visible="deployActionVisible"
+        <InstanceForm title="Create Task" :visible="deployActionVisible"
           :data="defaultForm" @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
       <a-tab-pane key="2" tab="Task Center">
         <TaskCenter @switchTab="handleSwitchTab" />
       </a-tab-pane>
-      <a-tab-pane key="3" tab="Deploy Instance">
+      <a-tab-pane key="3" tab="Task Instance">
         <InstanceList @switchTab="handleSwitchTab" />
       </a-tab-pane>
     </a-tabs>
@@ -26,22 +29,24 @@
 
 <script>
 import ServerList from './ServerList'
-import ConfigDir from './ConfigDir'
+import AppData from './AppData'
 import InstanceForm from './InstanceForm'
 import TaskCenter from './TaskCenter'
 import InstanceList from './InstanceList'
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
+import HelpView from './HelpView'
 
 export default {
   name: 'Home',
   mixins: [taskMixin, instanceMixin],
   components: {
     ServerList,
-    ConfigDir,
+    AppData,
     InstanceForm,
     TaskCenter,
-    InstanceList
+    InstanceList,
+    HelpView
   },
   data () {
     return {
@@ -90,9 +95,6 @@ export default {
 <style lang="stylus" scoped>
 .flex-card-wrap
   display inline-flex
-  // flex-direction row
-  // justify-content space-around
-  // align-items space-between
   padding 0 1rem 1rem 1rem
 .action-wrap
   text-align center

@@ -22,9 +22,9 @@
       </span>
       <span slot="projectPath" slot-scope="projectPath">
         <a-icon v-if="projectPath" theme="twoTone"
-          :title="checkDirExist(projectPath) ? 'normal' : 'not exist'"
-          :type="checkDirExist(projectPath) ? 'check-circle' : 'exclamation-circle'"
-          :two-tone-color="checkDirExist(projectPath) ? '#67C23A' : '#F56C6C'" />
+          :title="checkDirExist(projectPath) ? 'exist' : 'not exist'"
+          :type="checkDirExist(projectPath) ? 'check-circle' : 'warning'"
+          :two-tone-color="checkDirExist(projectPath) ? '#67C23A' : '#E6A23C'" />
         {{ projectPath }}
       </span>
       <span slot="localPostCommand" slot-scope="localPostCommand">
@@ -59,7 +59,7 @@
       </span>
     </a-table>
     <!-- modal -->
-    <InstanceForm title="Update Deploy Task " :data="curTask" :visible="deployActionVisible"
+    <InstanceForm title="Update Task" :data="curTask" :visible="deployActionVisible"
       @cancel="closeAddForm" @submit="onSubmit" />
   </div>
 </template>
