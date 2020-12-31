@@ -219,17 +219,17 @@ export default {
       }
     },
     // 提交表单
-    submitForm (val) {
+    submitForm (task) {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          const task = JSON.parse(JSON.stringify(val))
+          const submitTask = JSON.parse(JSON.stringify(task))
           for (let item of this.serverList) {
-            if (item._id === task.serverId) {
-              task.server = item
+            if (item._id === submitTask.serverId) {
+              submitTask.server = item
             }
           }
-          task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
-          this.$emit('submit', task)
+          submitTask.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+          this.$emit('submit', submitTask)
           this.form = JSON.parse(JSON.stringify(this.defaultForm))
           if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
         } else {

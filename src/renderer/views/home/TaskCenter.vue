@@ -177,11 +177,7 @@ export default {
         this._addTaskLogByTaskId(taskId, `总计耗时 ${costTime}s`, 'primary')
         this._changeTaskStatusAndCostTimeByTaskId(taskId, 'passed', costTime)
         // if task in deploy instance list finshed then update status
-        if (task._id) {
-          this.editInstanceList({
-            ...task
-          })
-        }
+        if (task._id) this.editInstanceList({ ...task })
         // system notification
         const myNotification = new Notification('✔ Success', {
           body: `🎉恭喜，所有任务已执行完成，${name} 执行成功！`
@@ -196,11 +192,7 @@ export default {
         this._changeTaskStatusAndCostTimeByTaskId(taskId, 'failed', costTime)
         console.log(error)
         // if task in deploy instance list finshed then update status
-        if (task._id) {
-          this.editInstanceList({
-            ...task
-          })
-        }
+        if (task._id) this.editInstanceList({ ...task })
         // system notification
         const myNotification = new Notification('❌Error', {
           body: `🙃 ${name} 执行中发生错误，请修改后再次尝试！`
