@@ -30,6 +30,7 @@ const taskMixin = {
       pendingTaskList: state => state.task.pendingTaskList,
       executingTaskQueue: state => state.task.executingTaskQueue
     }),
+    // executingTaskQueue sort by asc
     executingTaskList () {
       return _.orderBy(this.executingTaskQueue, ['lastExecutedTime'], ['asc'])
     }

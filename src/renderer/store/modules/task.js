@@ -1,18 +1,18 @@
+/**
+ * executingTaskQueue
+ * {
+ *   taskId: {
+ *       status: 'running',
+ *       logs: {
+ *            type: 'info',
+ *            msg: 'hello'
+ *       },
+ *       ...
+ *   }
+ * }
+ */
 const state = {
   pendingTaskList: [],
-  /**
-   * executingTaskQueue
-   * {
-   *   taskId: {
-   *       status: 'running',
-   *       logs: {
-   *            type: 'info',
-   *            msg: 'hello'
-   *       },
-   *       postCommand: ''
-   *   }
-   * }
-   */
   executingTaskQueue: {}
 }
 

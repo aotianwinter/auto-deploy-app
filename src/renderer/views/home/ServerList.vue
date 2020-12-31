@@ -58,7 +58,7 @@
         <!-- rsa key -->
         <a-form-model-item label="privateKey" prop="privateKey">
           <a-button @click="handleSelectDir">
-            <a-icon type="upload" />Click Project Dir
+            <a-icon type="upload" />Click PrivateKey
           </a-button>
           <p>
             {{ form.privateKey }}
@@ -67,7 +67,7 @@
           </p>
         </a-form-model-item>
         <a-form-model-item label="passphrase" prop="passphrase">
-          <a-input v-model="form.passphrase" placeholder="please input passphrase of server" />
+          <a-input-password v-model="form.passphrase" placeholder="please input passphrase of server" />
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -90,8 +90,7 @@ export default {
         name: [ { required: true, message: 'Please input server name', trigger: 'blur' } ],
         host: [ { required: true, message: 'Please input host of server', trigger: 'blur' } ],
         port: [ { required: true, message: 'Please input port of server', trigger: 'blur' } ],
-        username: [ { required: true, message: 'Please input username of server', trigger: 'blur' } ],
-        password: [ { required: true, message: 'Please input password of server', trigger: 'blur' } ]
+        username: [ { required: true, message: 'Please input username of server', trigger: 'blur' } ]
       }
     }
   },
