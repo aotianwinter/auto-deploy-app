@@ -2,9 +2,9 @@
 
 > An electron-vue app about auto deploy
 > 
-> 该项目持续更新中，欢迎提交 pr及issues 😘
+> The project is being continuously updated. Please submit PR and issues😘
 > 
-> 🎉Power Design By 打酱油
+> Power Design By 打酱油
 
 [Download](https://github.com/aotianwinter/auto-deploy-app/releases)
 
@@ -18,12 +18,12 @@
 - 支持**远端前置命令、后置命令**批量顺序执行
 - 支持仅执行**远端前置命令**，用于触发某些自动化脚本
 
-# How to use
-## 查看使用帮助
+## How to use
+### 查看使用帮助
 - 点击查看使用帮助
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d457357a18243dea053a8e6a3821b06~tplv-k3u1fbpfcp-watermark.image)
 
-## 创建任务并执行
+### 创建任务并执行
 - 创建服务器（支持密码、密钥）
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f5bbea08539a4ff7900a0219b73c1fbc~tplv-k3u1fbpfcp-watermark.image)
 
@@ -33,11 +33,11 @@
 - 任务结束后可保存
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95b032c4278043f383b4aaa34ee77603~tplv-k3u1fbpfcp-watermark.image)
 
-## 执行保存的任务实例
+### 执行保存的任务实例
 - 选择需要的任务点击运行
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9d66bd65625460ba28bc4346b28d38b~tplv-k3u1fbpfcp-watermark.image)
 
-# Build Setup
+## Build Setup
 
 ``` bash
 # install dependencies
