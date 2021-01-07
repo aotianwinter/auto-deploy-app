@@ -27,7 +27,7 @@
     <footer class="footer">
       <p title="version">
         <a-icon @click="openUrl('https://github.com/aotianwinter/auto-deploy-app/releases')" type="thunderbolt" />
-        v0.1.0
+        v{{ version }}
         <HelpView />
       </p>
       <p title="author 打酱油">
@@ -47,6 +47,7 @@ import InstanceList from './InstanceList'
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
 import HelpView from './HelpView'
+import { version } from '@/../../package.json'
 
 const { shell } = require('electron')
 export default {
@@ -64,7 +65,8 @@ export default {
     return {
       activeKey: '1',
       deployActionVisible: false,
-      defaultForm: {}
+      defaultForm: {},
+      version
     }
   },
   methods: {
