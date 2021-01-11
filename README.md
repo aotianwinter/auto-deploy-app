@@ -19,6 +19,12 @@
 - 支持仅执行**远端前置命令**，用于触发某些自动化脚本
 
 ## How to use
+
+> 若图片无法加载，可点击[这里](https://juejin.cn/post/6916302771129942030#heading-4)查看
+
+### 下载并安装
+[Download](https://github.com/aotianwinter/auto-deploy-app/releases)
+
 ### 查看使用帮助
 - 点击查看使用帮助
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d457357a18243dea053a8e6a3821b06~tplv-k3u1fbpfcp-watermark.image)
