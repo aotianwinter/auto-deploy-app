@@ -21,21 +21,21 @@
 ## How to use
 ### 查看使用帮助
 - 点击查看使用帮助
-![](./z-md/1.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d457357a18243dea053a8e6a3821b06~tplv-k3u1fbpfcp-watermark.image)
 
 ### 创建任务并执行
 - 创建服务器（支持密码、密钥）
-![](./z-md/2.png)
+![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f5bbea08539a4ff7900a0219b73c1fbc~tplv-k3u1fbpfcp-watermark.image)
 
 - 点击`Create Task`创建任务（本地编译-->上传文件夹-->编译并启动容器）
-![](./z-md/3.png)
+![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5514b4370f514618bb53966511a2c541~tplv-k3u1fbpfcp-watermark.image)
 
 - 任务结束后可保存
-![](./z-md/4.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95b032c4278043f383b4aaa34ee77603~tplv-k3u1fbpfcp-watermark.image)
 
 ### 执行保存的任务实例
 - 选择需要的任务点击运行
-![](./z-md/5.png)
+![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9d66bd65625460ba28bc4346b28d38b~tplv-k3u1fbpfcp-watermark.image)
 
 ## Build Setup
 
