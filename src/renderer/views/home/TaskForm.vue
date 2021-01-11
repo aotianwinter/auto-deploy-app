@@ -78,7 +78,7 @@
               local build command ( path | command )
               <a-tooltip>
                 <template slot="title">
-                  windows: PowerShell<br />
+                  windows: cmd<br />
                   unix: /bin/sh<br />
                   请确保符合语法要求 不使用无需填写
                 </template>
@@ -93,7 +93,7 @@
               local clean command ( path | command )
               <a-tooltip>
                 <template slot="title">
-                  windows: PowerShell<br />
+                  windows: cmd<br />
                   unix: /bin/sh<br />
                   请确保符合语法要求 不使用无需填写
                 </template>
