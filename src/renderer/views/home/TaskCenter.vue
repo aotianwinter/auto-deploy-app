@@ -153,7 +153,7 @@ export default {
           if (projectType === 'dir') {
             await this._uploadFile(ssh, localFile, deployDir + '/dist.zip', taskId)
             await this._runCommand(ssh, 'unzip dist.zip', deployDir, taskId)
-            await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
+            if (releaseDir !== 'dist') await this._runCommand(ssh, 'mv dist ' + releaseDir, deployDir, taskId)
             await this._runCommand(ssh, 'rm -f dist.zip', deployDir, taskId)
           } else {
             await this._uploadFile(ssh, localFile, deployDir + '/' + releaseDir, taskId)
