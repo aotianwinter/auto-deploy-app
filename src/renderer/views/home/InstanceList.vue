@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- table -->
-    <a-table style="overflow-y: auto" :columns="columns" rowKey="_id" :data-source="instanceList">
+    <a-table style="overflow-y: auto" :columns="columns" rowKey="_id" :data-source="instanceList" :scroll="{ x: 1600, y: 600 }">
       <span slot="status" slot-scope="status">
         <a-tag :color="taskStatusOptions[status].color">
           {{ taskStatusOptions[status].desc }}
@@ -84,7 +84,9 @@ export default {
       columns: [
         {
           dataIndex: 'name',
-          title: '名称'
+          title: '名称',
+          fixed: 'left',
+          width: 100
         },
         {
           dataIndex: 'server.name',
@@ -139,7 +141,9 @@ export default {
         {
           title: '操作',
           key: 'action',
-          scopedSlots: { customRender: 'action' }
+          scopedSlots: { customRender: 'action' },
+          fixed: 'right',
+          width: 120
         }
       ]
     }
@@ -152,7 +156,6 @@ export default {
     },
     // on run task
     onRunTask (val) {
-      this.$emit('switchTab', '2')
       const task = JSON.parse(JSON.stringify(val))
       task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
       this._addPendingTaskList(JSON.parse(JSON.stringify(task)))
