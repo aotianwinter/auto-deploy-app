@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- table -->
-    <a-table style="overflow-y: auto" :columns="columns" rowKey="_id" :data-source="instanceList">
+    <a-table :columns="columns" rowKey="_id" :data-source="instanceList" :scroll="{ x: 1200 }">
       <span slot="status" slot-scope="status">
         <a-tag :color="taskStatusOptions[status].color">
           {{ taskStatusOptions[status].desc }}
@@ -10,33 +10,33 @@
       <span slot="preCommandList" slot-scope="preCommandList">
         <p v-for="(item, index) in preCommandList" :key="index">
           <template v-if="item.path && item.command">
-            <a-tag>{{ item.path }}</a-tag> {{ item.command }}
+            <span class="path-span">{{ item.path }}</span>
+            {{ item.command }}
           </template>
         </p>
       </span>
+      <span slot="releasePath" slot-scope="releasePath">
+        <span class="path-span">{{ releasePath }}</span>
+      </span>
       <span slot="localPreCommand" slot-scope="localPreCommand">
         <p v-if="localPreCommand.path && localPreCommand.command">
-          <a-tag>{{ localPreCommand.path }}</a-tag>
+          <span class="path-span">{{ localPreCommand.path }}</span>
           <template>{{ localPreCommand.command }}</template>
         </p>
       </span>
       <span slot="projectPath" slot-scope="projectPath">
-        <a-icon v-if="projectPath" theme="twoTone"
-          :title="checkDirExist(projectPath) ? 'exist' : 'not exist'"
-          :type="checkDirExist(projectPath) ? 'check-circle' : 'warning'"
-          :two-tone-color="checkDirExist(projectPath) ? '#67C23A' : '#E6A23C'" />
-        {{ projectPath }}
+        <span class="path-span">{{ projectPath }}</span>
       </span>
       <span slot="localPostCommand" slot-scope="localPostCommand">
         <p v-if="localPostCommand.path && localPostCommand.command">
-          <a-tag>{{ localPostCommand.path }}</a-tag>
+          <span class="path-span">{{ localPostCommand.path }}</span>
           <template>{{ localPostCommand.command }}</template>
         </p>
       </span>
       <span slot="postCommandList" slot-scope="postCommandList">
         <p v-for="(item, index) in postCommandList" :key="index">
           <template v-if="item.path && item.command">
-            <a-tag>{{ item.path }}</a-tag> {{ item.command }}
+            <span class="path-span">{{ item.path }}</span> {{ item.command }}
           </template>
         </p>
       </span>
@@ -70,7 +70,6 @@ import dayjs from 'dayjs'
 import TaskForm from './TaskForm'
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
-const fs = require('fs')
 export default {
   name: 'InstanceList',
   mixins: [taskMixin, instanceMixin],
@@ -84,7 +83,9 @@ export default {
       columns: [
         {
           dataIndex: 'name',
-          title: '名称'
+          title: '名称',
+          fixed: 'left',
+          width: 100
         },
         {
           dataIndex: 'server.name',
@@ -101,7 +102,8 @@ export default {
         },
         {
           dataIndex: 'releasePath',
-          title: '发布路径'
+          title: '发布路径',
+          scopedSlots: { customRender: 'releasePath' }
         },
         {
           dataIndex: 'localPreCommand',
@@ -125,7 +127,8 @@ export default {
         },
         {
           dataIndex: 'lastExecutedTime',
-          title: '上次执行时间'
+          title: '上次执行时间',
+          ellipsis: true
         },
         {
           dataIndex: 'lastCostTime',
@@ -139,7 +142,9 @@ export default {
         {
           title: '操作',
           key: 'action',
-          scopedSlots: { customRender: 'action' }
+          scopedSlots: { customRender: 'action' },
+          fixed: 'right',
+          width: 120
         }
       ]
     }
@@ -152,7 +157,6 @@ export default {
     },
     // on run task
     onRunTask (val) {
-      this.$emit('switchTab', '2')
       const task = JSON.parse(JSON.stringify(val))
       task.lastExecutedTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
       this._addPendingTaskList(JSON.parse(JSON.stringify(task)))
@@ -173,20 +177,16 @@ export default {
       this.deployActionVisible = false
       await this.editInstanceList(instance)
       this.getInstanceList()
-    },
-    // 检查本地目录是否存在
-    checkDirExist (path) {
-      try {
-        fs.accessSync(path)
-        return true
-      } catch (err) {
-        console.log(err)
-      }
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
+.path-span
+  text-decoration underline
+  &:hover
+    color #409EFF
+  
 .anticon
   margin-right 6px
   font-size 18px

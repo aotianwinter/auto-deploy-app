@@ -1,4 +1,5 @@
 import { mapState } from 'vuex'
+import toBottom from '@/utils/toBottom'
 const _ = require('lodash')
 const fs = require('fs')
 const join = require('path').join
@@ -72,6 +73,9 @@ const taskMixin = {
           type
         }
       })
+      // TODO 更新
+      const el = document.getElementById('log-view')
+      if (el) toBottom(el)
     },
     // clean task log by task id
     _cleanTaskLogByTaskId (taskId) {

@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrap">
-    <a-tabs v-model="activeKey" @tabClick="onTabClick">
+    <a-tabs v-model="activeKey" :tab-position="tabPosition" @tabClick="onTabClick">
       <a-tab-pane key="1" tab="Server Center">
         <div class="flex-card-wrap">
           <ServerList />
@@ -22,7 +22,26 @@
       <a-tab-pane key="3" tab="Task Instance">
         <InstanceList @switchTab="handleSwitchTab" />
       </a-tab-pane>
+      <a-icon @click="visible = true" style="fontSize: 18px; margin: 1rem" type="setting" slot="tabBarExtraContent" />
     </a-tabs>
+    <!-- drawer -->
+    <a-drawer
+      title="Setting"
+      placement="right"
+      :closable="false"
+      :visible="visible"
+      @close="visible = false"
+    >
+      <a-form>
+        <a-form-item label="Tab Position" layout="vertical">
+          <a-radio-group @change="updateTabPosition" v-model="tabPosition" button-style="solid">
+            <a-radio-button v-for="(item, index) in tabPositionOpions" :key="index" :value="item">
+              {{ item }}
+            </a-radio-button>
+          </a-radio-group>
+        </a-form-item>
+      </a-form>
+    </a-drawer>
     <!-- footer -->
     <footer class="footer">
       <p title="version">
@@ -46,13 +65,14 @@ import TaskCenter from './TaskCenter'
 import InstanceList from './InstanceList'
 import taskMixin from '@/store/task-mixin'
 import instanceMixin from '@/store/instance-mixin'
+import appMixin from '@/store/app-mixin'
 import HelpView from './HelpView'
 import { version } from '@/../../package.json'
 
 const { shell } = require('electron')
 export default {
   name: 'Home',
-  mixins: [taskMixin, instanceMixin],
+  mixins: [taskMixin, instanceMixin, appMixin],
   components: {
     ServerList,
     AppData,
@@ -63,11 +83,29 @@ export default {
   },
   data () {
     return {
+      tabPosition: 'top',
+      visible: false,
+      tabPositionOpions: [
+        'left',
+        'top',
+        'right'
+      ],
       activeKey: '1',
       deployActionVisible: false,
       defaultForm: {},
       version
     }
+  },
+  async created () {
+    const setting = await this.getSetting()
+    if (!setting) {
+      console.log('init app setting')
+      await this.initSetting({
+        tabPosition: 'top'
+      })
+      await this.getSetting()
+    }
+    this.tabPosition = this.setting.tabPosition
   },
   methods: {
     // on tab click
@@ -105,6 +143,14 @@ export default {
     // open url
     openUrl (url) {
       shell.openExternal(url)
+    },
+    // update tabPosition
+    async updateTabPosition (event) {
+      await this.updateSetting({
+        ...this.setting,
+        tabPosition: event.target.value
+      })
+      this.getSetting()
     }
   }
 }

@@ -39,7 +39,7 @@
             </a-popconfirm>
             <a-icon title="edit" @click="showEditForm(item)" type="edit" />
           </template>
-          <LogView :logs="item.logs" />
+          <LogView id="log-view" :logs="item.logs" />
         </a-card>
       </a-tab-pane>
     </a-tabs>
