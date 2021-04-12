@@ -42,13 +42,17 @@
     </a-drawer>
     <!-- footer -->
     <footer class="footer">
-      <p title="version">
-        <a-icon @click="openUrl('https://github.com/aotianwinter/auto-deploy-app/releases')" type="thunderbolt" />
-        v{{ version }}
-        <HelpView />
-      </p>
-      <p title="author 打酱油">
-        <a-icon @click="openUrl('https://github.com/electron/update-electron-app')" type="github" />
+      <div>
+        <span :title="`version: v${version}`" class="footer-link"
+          @click="openUrl('https://github.com/aotianwinter/auto-deploy-app/releases')">
+          <a-icon type="thunderbolt" />
+          v{{ version }}
+        </span>
+        <HelpView style="margin-left: 0.5rem" />
+      </div>
+      <p title="author 打酱油" class="footer-link"
+        @click="openUrl('https://github.com/aotianwinter/auto-deploy-app')">
+        <a-icon type="github" />
         打酱油
       </p>
     </footer>
@@ -171,4 +175,6 @@ export default {
     width 100%
     padding 4px 0.5rem
     background white
+    .footer-link
+      cursor pointer
 </style>

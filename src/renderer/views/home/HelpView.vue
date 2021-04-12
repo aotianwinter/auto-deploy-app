@@ -1,6 +1,6 @@
 <template>
   <span>
-    <a-icon title="use helper" type="question-circle" @click="showModal" />
+    <a-icon title="Instructions for use" type="question-circle" @click="showModal" />
     <!-- modal -->
     <a-modal v-model="visible" title="Use Helper" @ok="visible = false" :width="1000">
       <a-divider orientation="left">
