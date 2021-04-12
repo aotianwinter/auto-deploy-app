@@ -5,7 +5,7 @@
         <div class="flex-card-wrap">
           <ServerList />
           <!-- config card -->
-          <AppData style="margin-left: 1rem" />
+          <!-- <AppData style="margin-left: 1rem" /> -->
         </div>
         <!-- action -->
         <div class="action-wrap">
@@ -167,6 +167,7 @@ export default {
     padding 1rem 0
   .footer
     display inline-flex
+    z-index 10
     justify-content space-between
     position fixed
     left 0
