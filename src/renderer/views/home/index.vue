@@ -4,8 +4,6 @@
       <a-tab-pane key="1" tab="Server Center">
         <div class="flex-card-wrap">
           <ServerList />
-          <!-- config card -->
-          <!-- <AppData style="margin-left: 1rem" /> -->
         </div>
         <!-- action -->
         <div class="action-wrap">
@@ -59,7 +57,6 @@
 
 <script>
 import ServerList from './ServerList'
-import AppData from './AppData'
 import TaskForm from './TaskForm'
 import TaskCenter from './TaskCenter'
 import InstanceList from './InstanceList'
@@ -75,7 +72,6 @@ export default {
   mixins: [taskMixin, instanceMixin, appMixin],
   components: {
     ServerList,
-    AppData,
     TaskForm,
     TaskCenter,
     InstanceList,
