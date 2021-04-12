@@ -14,7 +14,7 @@
         <TaskForm title="Create Task" :visible="deployActionVisible"
           :data="defaultForm" @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
-      <a-tab-pane key="2" tab="Executing task">
+      <a-tab-pane key="2" tab="Executing Task">
         <TaskCenter @switchTab="handleSwitchTab" />
       </a-tab-pane>
       <a-tab-pane key="3" tab="Task Instance">
