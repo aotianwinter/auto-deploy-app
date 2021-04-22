@@ -2,7 +2,7 @@ import Vue from 'vue'
 import 'ant-design-vue/dist/antd.css'
 // base library
 import {
-  Tree,
+  // Affix,
   Empty,
   Collapse,
   ConfigProvider,
@@ -17,8 +17,8 @@ import {
   Card,
   Form,
   FormModel,
-  Row,
-  Col,
+  // Row,
+  // Col,
   Modal,
   Table,
   Tabs,
@@ -39,14 +39,13 @@ import {
   Divider,
   DatePicker,
   TimePicker,
-  Upload,
-  Progress,
-  Skeleton,
+  // Upload,
+  // Progress,
+  // Skeleton,
   Popconfirm,
-  PageHeader,
   Result,
-  Statistic,
-  Descriptions,
+  // Statistic,
+  // Descriptions,
   message,
   notification
 } from 'ant-design-vue'
@@ -60,7 +59,7 @@ import {
 // import PermissionHelper from '@/core/permission/permission'
 // import './directives/action'
 
-Vue.use(Tree)
+// Vue.use(Affix)
 Vue.use(Empty)
 Vue.use(Collapse)
 Vue.use(ConfigProvider)
@@ -75,8 +74,8 @@ Vue.use(Select)
 Vue.use(Card)
 Vue.use(Form)
 Vue.use(FormModel)
-Vue.use(Row)
-Vue.use(Col)
+// Vue.use(Row)
+// Vue.use(Col)
 Vue.use(Modal)
 Vue.use(Table)
 Vue.use(Tabs)
@@ -97,14 +96,13 @@ Vue.use(Tag)
 Vue.use(Divider)
 Vue.use(DatePicker)
 Vue.use(TimePicker)
-Vue.use(Upload)
-Vue.use(Progress)
-Vue.use(Skeleton)
+// Vue.use(Upload)
+// Vue.use(Progress)
+// Vue.use(Skeleton)
 Vue.use(Popconfirm)
-Vue.use(PageHeader)
 Vue.use(Result)
-Vue.use(Statistic)
-Vue.use(Descriptions)
+// Vue.use(Statistic)
+// Vue.use(Descriptions)
 
 Vue.prototype.$confirm = Modal.confirm
 Vue.prototype.$message = message
