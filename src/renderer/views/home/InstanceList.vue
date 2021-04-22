@@ -184,8 +184,7 @@ export default {
 <style lang="stylus" scoped>
 .path-span
   text-decoration underline
-  &:hover
-    color #409EFF
+  color #409EFF
   
 .anticon
   margin-right 6px

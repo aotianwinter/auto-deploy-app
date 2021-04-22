@@ -4,8 +4,6 @@
       <a-tab-pane key="1" tab="Server Center">
         <div class="flex-card-wrap">
           <ServerList />
-          <!-- config card -->
-          <AppData style="margin-left: 1rem" />
         </div>
         <!-- action -->
         <div class="action-wrap">
@@ -16,7 +14,7 @@
         <TaskForm title="Create Task" :visible="deployActionVisible"
           :data="defaultForm" @cancel="closeAddForm" @submit="onSubmit" />
       </a-tab-pane>
-      <a-tab-pane key="2" tab="Executing task">
+      <a-tab-pane key="2" tab="Executing Task">
         <TaskCenter @switchTab="handleSwitchTab" />
       </a-tab-pane>
       <a-tab-pane key="3" tab="Task Instance">
@@ -44,13 +42,17 @@
     </a-drawer>
     <!-- footer -->
     <footer class="footer">
-      <p title="version">
-        <a-icon @click="openUrl('https://github.com/aotianwinter/auto-deploy-app/releases')" type="thunderbolt" />
-        v{{ version }}
-        <HelpView />
-      </p>
-      <p title="author 打酱油">
-        <a-icon @click="openUrl('https://github.com/electron/update-electron-app')" type="github" />
+      <div>
+        <span :title="`version: v${version}`" class="footer-link"
+          @click="openUrl('https://github.com/aotianwinter/auto-deploy-app/releases')">
+          <a-icon type="thunderbolt" />
+          v{{ version }}
+        </span>
+        <HelpView style="margin-left: 0.2rem" />
+      </div>
+      <p title="author 打酱油" class="footer-link"
+        @click="openUrl('https://github.com/aotianwinter/auto-deploy-app')">
+        <a-icon type="github" />
         打酱油
       </p>
     </footer>
@@ -59,7 +61,6 @@
 
 <script>
 import ServerList from './ServerList'
-import AppData from './AppData'
 import TaskForm from './TaskForm'
 import TaskCenter from './TaskCenter'
 import InstanceList from './InstanceList'
@@ -75,7 +76,6 @@ export default {
   mixins: [taskMixin, instanceMixin, appMixin],
   components: {
     ServerList,
-    AppData,
     TaskForm,
     TaskCenter,
     InstanceList,
@@ -167,6 +167,7 @@ export default {
     padding 1rem 0
   .footer
     display inline-flex
+    z-index 10
     justify-content space-between
     position fixed
     left 0
@@ -174,4 +175,6 @@ export default {
     width 100%
     padding 4px 0.5rem
     background white
+    .footer-link
+      cursor pointer
 </style>
