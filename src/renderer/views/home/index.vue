@@ -48,7 +48,7 @@
           <a-icon type="thunderbolt" />
           v{{ version }}
         </span>
-        <HelpView style="margin-left: 0.5rem" />
+        <HelpView style="margin-left: 0.2rem" />
       </div>
       <p title="author 打酱油" class="footer-link"
         @click="openUrl('https://github.com/aotianwinter/auto-deploy-app')">
